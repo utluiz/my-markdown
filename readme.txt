@@ -22,3 +22,9 @@ Markdown Parser
 
     - https://github.com/cebe/markdown
     - https://github.com/michelf/php-markdown
+
+Code prettify
+
+Google: https://github.com/google/code-prettify
+Used from CDN
+See: https://github.com/google/code-prettify/blob/master/docs/getting_started.md

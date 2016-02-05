@@ -1,27 +1,5 @@
 <?php
-/*
-Plugin Name: My WP-Markdown
-Description: Allows you to use MarkDown in posts, BBPress forums and comments
-Version: 1.5.1
-Author: Luiz Ricardo
-Author URI: http://stephenharris.info
-*/
-/*  Copyright 2011 Stephen Harris (stephen@harriswebsolutions.co.uk)
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-*/
 class WordPress_MyMarkdown {
 
 	var $domain = 'mymarkdown';
@@ -434,34 +412,22 @@ class WordPress_MyMarkdown {
 		$min = (defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG) ? '' : '.min';
 		
 		//Register editor scripts &
-		wp_register_script( 'my-wp-markdown-convertor', $plugin_dir . "js/pagedown/markdown-converter{$min}.js", array(), self::$version );
-		wp_register_script( 'my-wp-markdown-sanitizer', $plugin_dir . "js/pagedown/markdown-sanitizer{$min}.js", array(), self::$version );
-		wp_register_script( 'my-wp-markdown-editor', $plugin_dir . "js/pagedown/markdown-editor{$min}.js", array('my-wp-markdown-convertor','my-wp-markdown-sanitizer'), self::$version );
+		wp_register_script( 'my-wp-markdown-convertor', $plugin_dir . "js/pagedown/Markdown.Converter.js", array(), self::$version );
+		wp_register_script( 'my-wp-markdown-sanitizer', $plugin_dir . "js/pagedown/Markdown.Sanitizer.js", array(), self::$version );
+		wp_register_script( 'my-wp-markdown-editor', $plugin_dir . "js/pagedown/Markdown.Editor.js", array('my-wp-markdown-convertor','my-wp-markdown-sanitizer'), self::$version );
 		
 		//Register prettify script
-		wp_register_script( 'my-wp-markdown-prettify',$plugin_dir. "js/prettify{$min}.js", array('jquery'), self::$version );
-		
+		wp_register_script( 'my-wp-markdown-prettify',"https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js", array(), self::$version );
+
 		//Register editor style 
 		wp_register_style( 'my-wp-markdown-editor', $plugin_dir.'css/markdown-editor.css', array(), self::$version );
-		
-		//Register prettify style
-		wp_register_style( 'my-wp-markdown-prettify', apply_filters( 'wpmarkdown_prettify_style_src', $plugin_dir.'css/prettify.css' ), array(), self::$version );
-		
-		$markdown_dependancy = array('jquery');
-		$options = get_option($this->domain);
 
-		 //Load prettify if enabled and viewing an appropriate post.
-		if( !empty( $options['prettify'] ) ){
-			$markdown_dependancy[]= 'my-wp-markdown-prettify';
+        if( !is_admin() && $this->load_prettify() ){
+            wp_enqueue_script( 'my-wp-markdown-prettify' );
+        }
 
-			if( !is_admin() && $this->load_prettify() ){	
-				wp_enqueue_script( 'my-wp-markdown-prettify' );
-				wp_enqueue_style( 'my-wp-markdown-prettify' );
-			}
-		}
-		
 		//This script sets the ball rolling with the editor & preview
-   		wp_register_script( 'my-wp-markdown', $plugin_dir . "js/markdown{$min}.js", $markdown_dependancy, self::$version );
+   		wp_register_script( 'my-wp-markdown', $plugin_dir . "js/markdown.js", array('jquery'), self::$version );
 	}
 	
 	/**
@@ -474,7 +440,7 @@ class WordPress_MyMarkdown {
 		$post_types = $this->get_option( 'post_types' ); 
 		
 		if( $this->get_option( 'prettify') && in_array( $post_type, $post_types ) ){
-			wp_enqueue_style('my-wp-markdown-prettify');
+			//wp_enqueue_style('my-wp-markdown-prettify');
 			wp_enqueue_script( 'my-wp-markdown' ); //Sets the prettify ball rolling.
 		}
 		
@@ -490,7 +456,6 @@ class WordPress_MyMarkdown {
 				wp_enqueue_script( 'my-wp-markdown-prettify' );
 				wp_enqueue_script( 'my-wp-markdown-editor' );
 				wp_enqueue_style( 'my-wp-markdown-editor' );
-				wp_enqueue_style( 'my-wp-markdown-prettify' );
 				add_action( 'admin_print_footer_scripts', array($this,'admin_footers_script'),100 );
 		}
 	}
@@ -498,20 +463,23 @@ class WordPress_MyMarkdown {
 	function admin_footers_script(){
 	?> <script>
 		jQuery(document).ready(function($) {                
-			$('#wp-content-editor-container').after("<div id='wmd-previewcontent' class='wmd-panel wmd-preview prettyprint'></div>");
+			$('#content').after("<div id='wmd-previewcontent' class='wmd-panel wmd-preview prettyprint'></div>");
 			$('#ed_toolbar').html("<div id='wmd-button-barcontent'></div>");
 			var converter = new Markdown.getSanitizingConverter();
 			var editor = new Markdown.Editor(converter, 'content');
 			editor.run();
 			$('.wmd-preview pre').addClass('prettyprint');
-			prettyPrint();
 			if (typeof prettyPrint == 'function') {
 				prettyPrint();
-				editor.hooks.chain("onPreviewRefresh", function () {
-				        $('.wmd-preview pre').addClass('prettyprint');
-					prettyPrint();
-   				 });
 			}
+            jQuery('#wmd-previewcontent').height(jQuery('#content').height());
+            editor.hooks.chain("onPreviewRefresh", function () {
+                jQuery('#wmd-previewcontent').height(jQuery('#content').height());
+                $('.wmd-preview pre').addClass('prettyprint');
+                if (typeof prettyPrint == 'function') {
+                    prettyPrint();
+                }
+            });
 		});
 		</script><?php
 	}

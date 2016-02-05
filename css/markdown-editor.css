@@ -1,7 +1,6 @@
 /* MarkDown editor */
 .wmd-panel{width: 100%;}
 .wmd-button-bar {width: 100%;}
-.wmd-preview {border: 2px dotted #CCCCCC;clear: both;color: #555555;font-size: 14px !important;line-height: 1.4em !important;margin-bottom: 5px;margin-right: 5px;padding: 3px;width: 100%;}
 .wmd-preview pre{background:none;border:none;}
 .wmd-preview pre code{display:block!important;}
 .wmd-preview code{display:inline;background-color: #F0FFF8;border: 1px solid #CEEFE1;font-size: 13px;padding: 1px 3px;margin:0px;}
@@ -31,3 +30,24 @@ body.reply-edit .bbp-reply-form .wmd-preview code{ display:inline; width: auto; 
 #postdivrich blockquote{font-family: Georgia,"Bitstream Charter",serif;font-style: italic;font-weight: normal;margin: 0 3em;}
 #postdivrich .wmd-preview ul{list-style: square;margin-left: 2em;}
 .wp-admin .wmd-prompt-dialog > div {font-size: 1em;}
+
+#content {
+    width: calc(50% - 2px);
+    display: inline-block;
+    vertical-align: top;
+}
+
+.wmd-preview {clear: both;line-height: 1.4em !important;margin-bottom: 5px;margin-right: 5px;padding: 3px;width: 100%;}
+
+#postdivrich .wmd-preview {
+    margin: 35px 0px 10px 0px;
+    padding: 20px;
+    border-left: 11px solid #aaa;
+    background: #fff;
+    display: inline-block;
+    text-align: initial;
+    width: calc(50% - 50px);
+    overflow: auto;
+    max-height: 100%;
+    vertical-align: top;
+}

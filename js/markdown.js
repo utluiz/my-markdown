@@ -28,6 +28,7 @@ jQuery(document).ready(function($) {
 				editor.hooks.chain("onPreviewRefresh", function () {
 					$('.wmd-preview pre').addClass('prettyprint');
 					prettyPrint();
+					$('.wmd-preview').height($('#content').height());
 				});
 			}
 		}
