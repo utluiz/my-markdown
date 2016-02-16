@@ -26,7 +26,7 @@ class WordPress_MyMarkdown {
 		register_uninstall_hook(__FILE__,array( __CLASS__, 'uninstall' )); 
 		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'set_current_user', array( $this, 'maybe_remove_kses' ), 99 );
-		add_action( 'admin_init', array( $this, 'admin_init' ) );
+        add_action( 'admin_init', array( $this, 'admin_init' ) );
 	}
 
 	static function install(){
@@ -39,59 +39,15 @@ class WordPress_MyMarkdown {
 		delete_option('markdown');
 	}
 
-
 	public function init() {
-		//Allow translations
-		load_plugin_textdomain( 'markdown', false, basename(dirname(__FILE__)).'/languages');
-
-		//Markdown posts and comments
-		add_filter('pre_comment_content',array($this,'pre_comment_content'),5);
-		add_filter( 'wp_insert_post_data', array( $this, 'wp_insert_post_data' ), 10, 2 );
-		add_filter('bbp_new_reply_pre_content',array( $this, 'bbp_reply_pre_content' ), 5, 2 );
-		add_filter('bbp_edit_reply_pre_content',array( $this, 'bbp_reply_pre_content' ), 5, 2 );
-		add_filter('bbp_new_topic_pre_content',array( $this, 'bbp_topic_pre_content' ), 5, 2 );
-		add_filter('bbp_edit_topic_pre_content',array( $this, 'bbp_topic_pre_content' ), 5, 2 );
-		
-		//See https://github.com/stephenharris/WP-MarkDown/issues/25
-		if( $this->is_Markdownable('reply') ){
-			remove_filter( 'bbp_new_reply_pre_content', 'bbp_code_trick',  20 );
-			remove_filter( 'bbp_edit_reply_pre_content', 'bbp_code_trick',  20 );
-			remove_filter( 'bbp_get_form_reply_content', 'bbp_code_trick_reverse',  10 );
-		}
-		
-		if( $this->is_Markdownable('topic') ){
-			remove_filter( 'bbp_new_topic_pre_content', 'bbp_code_trick', 20 );
-			remove_filter( 'bbp_edit_topic_pre_content', 'bbp_code_trick', 20 );
-			remove_filter( 'bbp_get_form_topic_content', 'bbp_code_trick_reverse', 10 );
-		}
-		
+		add_filter('wp_insert_post_data', array( $this, 'wp_insert_post_data' ), 10, 2);
 		$this->maybe_remove_kses();
 		remove_filter( 'content_save_pre', 'balanceTags', 50 ); //Remove balanceTags and apply after MD -> HTML
-
-		//Convert HTML to Markdown (posts, comments, BBPress front-end editing)
-		add_filter( 'edit_post_content', array( $this, 'edit_post_content' ), 10, 2 );
-		add_filter( 'comment_edit_pre',  array( $this, 'edit_comment_content' ));
-		add_filter('bbp_get_form_reply_content',array( $this, 'bbpress_edit_reply' ));
-		add_filter('bbp_get_form_topic_content',array( $this, 'bbpress_edit_topic' ));
-
-		//Add button bar and prettyify to BBPress and comment fields
-		if($this->is_bar_enabled('comment')){
-			add_filter('comment_form_field_comment',array($this,'comment_field'));
-		}
-		if($this->is_bar_enabled('bbpress')){
-			add_action('bbp_theme_before_reply_form_content',array( $this,'pre_textarea_prettify_bbpress_reply'));
-			add_action('bbp_theme_after_reply_form_content',array( $this,'post_textarea_prettify_bbpress_reply'));
-			add_action('bbp_theme_before_topic_form_content',array( $this,'pre_textarea_prettify_bbpress_topic'));
-			add_action('bbp_theme_after_topic_form_content',array( $this,'post_textarea_prettify_bbpress_topic'));
-		}
-	
-		//Register scripts
+		add_filter('edit_post_content', array($this, 'edit_post_content'), 10, 2);
 		add_action('wp_enqueue_scripts', array($this,'register_scripts'));
-		
-		//Ensures scripts/styles are queued (in particular on home page)
-		if( $this->get_option( 'prettify') )
-			add_filter( 'the_content', array( $this, 'the_content' ) );
-		
+		if( $this->get_option( 'prettify') ) {
+			add_filter('the_content', array($this, 'the_content'));
+        }
 	}
 
 	/**
@@ -104,9 +60,10 @@ class WordPress_MyMarkdown {
 			$this->kses_removed = true;
 		}
 	}
+
 	/*
-	* Settings
-	*/
+	 * Settings
+	 */
 	function admin_init(){
 		register_setting('writing',$this->domain, array($this,'validate'));
 		add_settings_section( $this->domain.'_section', 'MarkDown', array($this,'settings'), 'writing'); 
@@ -114,14 +71,10 @@ class WordPress_MyMarkdown {
 		add_settings_field($this->domain.'_markdownbar', __('Enable MarkDown help bar for:', 'my-wp-markdown'), array($this,'settings_markdownbar'), 'writing', $this->domain.'_section');
 		add_settings_field($this->domain.'_prettify', __('Enable Prettify syntax highlighter:', 'my-wp-markdown'), array($this,'settings_prettify'), 'writing', $this->domain.'_section');
 
-		//Remove html tab for markdown posts
-		add_filter( 'user_can_richedit', array($this,'can_richedit'), 99 );
-
-		//Add admin scripts
-		if($this->is_bar_enabled('posteditor')){
-			add_action('admin_enqueue_scripts', array($this,'admin_scripts'),10,1);
-		}
-	}
+		add_filter('user_can_richedit', array($this,'can_richedit'), 99); //Remove html tab for markdown posts
+		add_action('admin_enqueue_scripts', array($this,'admin_scripts'), 10, 1);
+        add_action('wp_restore_post_revision', array($this, 'restore_revision'), 10, 2);
+    }
 
 	public function can_richedit($bool){
 		$screen = get_current_screen();
@@ -134,7 +87,7 @@ class WordPress_MyMarkdown {
 
 	function settings(){
 		//settings_fields('markdown'); 
-		echo '<p>'.__("Select the post types or comments that will support Markdown. Comments and bbPress forums can also feature a Markdown 'help bar' and previewer. Automatic syntax highlighting can be provided by <a href='http://code.google.com/p/google-code-prettify/' target='_blank'>Prettify</a>.",'my-wp-markdown' ).'</p>';
+		echo '<p>'.__("Select the post types or comments that will support Markdown. Comments can also feature a Markdown 'help bar' and previewer. Automatic syntax highlighting can be provided by <a href='http://code.google.com/p/google-code-prettify/' target='_blank'>Prettify</a>.",'my-wp-markdown' ).'</p>';
 	}
 
 	function settings_posttypes(){
@@ -154,16 +107,10 @@ class WordPress_MyMarkdown {
 		$options = get_option($this->domain);
 		$savedtypes = (array) $options['post_types'];
 		$barenabled = isset($options['markdownbar']) ? $options['markdownbar']  : self::$options['markdownbar'];
-		$types=get_post_types(array('public'   => true),'objects'); 
-
 		$id = "id={$this->domain}_markdownbar'";
-		//If Forum, Topic, and Replies exist assume BBPress is activated:
-		$type_names = array_keys($types);
-		$bbpress = array_unique(array_merge($type_names,array('reply','forum','topic'))) === $type_names;
 
 		echo "<label><input type='checkbox' {$id} ".checked(in_array('posteditor',$barenabled),true,false)."name='{$this->domain}[markdownbar][]' value='posteditor' />". esc_html__( 'Post editor','my-wp-markdown' )."</label></br>";
 		echo "<label><input type='checkbox' {$id} ".checked(in_array('comment',$barenabled)&&in_array('comment',$savedtypes),true,false)."name='{$this->domain}[markdownbar][]' value='comment' />".esc_html__('Comments','my-wp-markdown')."</label></br>";
-		echo "<label><input type='checkbox' {$id} ".checked(in_array('bbpress',$barenabled),true,false).disabled($bbpress,false,false)."name='{$this->domain}[markdownbar][]' value='bbpress' />". esc_html__('bbPress topics and replies','my-wp-markdown' )."</label></br>";
 	}
 
 	function settings_prettify(){
@@ -186,8 +133,6 @@ class WordPress_MyMarkdown {
 
 		return $clean;
 	}
-
-	
 
 	/*
 	* Function to determine if markdown has been enabled for the current post_type or comment
@@ -241,248 +186,114 @@ class WordPress_MyMarkdown {
 		return $options[$option];
 	}
 
+	public function wp_insert_post_data($data, $postarr) {
+        error_log("wp_insert_post_data");
+        //error_log("- DATA = " . print_r($data, true));
+        //error_log("- POSTARR = " . print_r($postarr, true));
+        //error_log("- POST = " . print_r($_POST, true));
+        $content = $data['post_content'];
+		if ($this->is_Markdownable($data['post_type'])) {
+            error_log("- Saving Markdown and Converting");
+            $data["post_content_filtered"] = $content;
+            $content = $_POST['wmd-htmlcontent'];
+            if (!$content) {
+                error_log("loading previous version");
+                $content = get_post((int) $data['post_parent'])->post_content_filtered;
+            }
+            error_log($content);
+            error_log('**************');
+            error_log(do_shortcode($content));
+            if (!$content) die('no content');
+		} else if ($data['post_type'] =='revision' && $this->is_Markdownable($data['post_parent'])) {
+            error_log("Revision - parent:" . $data['post_parent']);
+            $meta_markdown = get_post((int) $data['post_parent'])->post_content_filtered;
+//            error_log("- loaded parent markdown:");
+//            error_log($meta_markdown);
+//            error_log("#-#-#-#-#");
+            $data["post_content_filtered"] = $meta_markdown;
+            return $data;
+        }
 
-	/*
-	* Convert Markdown to HTML prior to insertion to database
-	*/
-	//For comments
-	function pre_comment_content( $comment ){
-		if( $this->is_Markdownable( 'comment' ) ){
-			$comment = stripslashes( $comment );
-			$comment = wpmarkdown_markdown_to_html( $comment );
-			$comment = addslashes( $comment );
-		}
-		return $comment;
-	}
-	
-	//For posts
-	public function wp_insert_post_data( $data, $postarr ) {
-		
-		if( 
-			$this->is_Markdownable( $data['post_type'] ) 
-			|| ( $data['post_type'] =='revision' && $this->is_Markdownable( $data['post_parent'] ) ) 
-		){
-			$content = stripslashes( $data['post_content'] );
-			$content = wpmarkdown_markdown_to_html( $content );
-			$data['post_content'] = addslashes( $content );
-		}
-		
 		//If we have removed kses - add it here
-		if( $this->kses_removed ){
-			$data['post_content'] = wp_filter_post_kses( $data['post_content'] );;
+		if ($this->kses_removed) {
+            $content = wp_filter_post_kses($content);
 		}
-		
-		$data['post_content'] = balanceTags( $data['post_content'] );
-		
+		$data['post_content'] = balanceTags($content);
 		return $data;
 	}
 
-	//For bbPress replies (triggered before wp_kses)
-	public function bbp_reply_pre_content( $content ) {		
-		if( $this->is_Markdownable('reply') ){
-			$content = stripslashes($content );
-			$content = wpmarkdown_markdown_to_html( $content );
-			$content = addslashes($content);
-		}
-		return $content;
-	}
-
-	//For bbPress topics (triggered before wp_kses)
-	public function bbp_topic_pre_content( $content ) {		
-		if( $this->is_Markdownable( 'topic' ) ){
-			$content = stripslashes( $content );
-			$content = wpmarkdown_markdown_to_html( $content );
-			$content = addslashes( $content );
-		}
-		return $content;
-	}
-
-
-	/*
-	* Convert HTML to MarkDown for editing
-	*/
+    public function restore_revision($id, $revision_id) {
+        //error_log("restore_revision $id / $revision_id");
+        //die("restore");
+        //var_dump("restore", $post_id, $revision_id);
+        //die();
+        //TODO update content with markdown. see https://github.com/Automattic/jetpack/blob/master/modules/markdown/easy-markdown.php
+        return $id;
+    }
 
 	//Post content
-	public function edit_post_content( $content, $id ) {
-		if( $this->is_Markdownable( (int) $id) ){
-			$content = wpmarkdown_html_to_markdown( $content );
-		}
-		return $content;
-	}
-
-	//Comment content
-	public function edit_comment_content( $content ) {
-		if( $this->is_Markdownable( 'comment' ) ){
-			$content = htmlspecialchars_decode( $content );
-			$content = wpmarkdown_html_to_markdown( $content );
-			$content = esc_html( $content );
-		}
-		return $content;
-	}
-
-	public function bbpress_edit_reply( $content = '' ) {
-		return $this->bbpress_edit( $content, 'reply' );
-	}
-	public function bbpress_edit_topic( $content = '' ) {
-		return $this->bbpress_edit( $content, 'topic' );
-	}
-	public function bbpress_edit( $content = '', $type = '' ) {
-		if( $this->is_Markdownable( $type ) ){
-			$content = htmlspecialchars_decode( $content );
-			$content = wpmarkdown_html_to_markdown( $content );
-			$content = esc_attr( $content );
-		}
-		return $content;
-	}
-
-
-	/*
-	* Adds html for the textareas to make them PageDown compatible 
-       * Adds the PageDown 'button bar'
-	*/
-	function pre_textarea_prettify_bbpress_reply(){
-		if( $this->is_Markdownable( 'reply' ) ){
-			add_filter( 'bbp_use_wp_editor', '__return_false' );
-			echo self::pre_textarea_prettify( 'bbp_reply_content' );
-		}
-	}
-	function post_textarea_prettify_bbpress_reply(){
-		if( $this->is_Markdownable( 'reply' ) ){
-			add_filter( 'bbp_use_wp_editor', '__return_false' );
-			echo self::post_textarea_prettify( 'bbp_reply_content' );
-		}
-	}
-	function pre_textarea_prettify_bbpress_topic(){
-		if($this->is_Markdownable('topic')){
-			add_filter('bbp_use_wp_editor','__return_false');
-			echo self::pre_textarea_prettify('bbp_topic_content');
-		}
-	}
-	function post_textarea_prettify_bbpress_topic(){
-		if($this->is_Markdownable('topic')){
-			add_filter('bbp_use_wp_editor','__return_false');
-			echo self::post_textarea_prettify('bbp_topic_content');
-		}
-	}
-
-	function comment_field($html){
-		if($this->is_Markdownable('comment')){
-			$html =self::pre_textarea_prettify('comment').$html.self::post_textarea_prettify('comment');
-		}
-		return $html;
-	}
-
-	function pre_textarea_prettify($id=""){
-		
-		//Quick fix ensure my-wp-markdown scripts are registered @see https://github.com/stephenharris/WP-MarkDown/issues/27
-		$this->register_scripts();
-		
-		wp_enqueue_script( 'my-wp-markdown-editor' );
-		wp_enqueue_script( 'my-wp-markdown' );
-		wp_enqueue_style( 'my-wp-markdown-editor' );
-		$id = esc_attr($id);
-
-		$help = apply_filters('wpmarkdown_help_text'," <p>To create code blocks or other preformatted text, indent by four spaces:</p>
-        <pre class='wmd-help'><span class='wmd-help-spaces'>&nbsp;&nbsp;&nbsp;&nbsp;</span>This will be displayed in a monospaced font. The first four 
-<span class='wmd-help-spaces'>&nbsp;&nbsp;&nbsp;&nbsp;</span>spaces will be stripped off, but all other whitespace
-<span class='wmd-help-spaces'>&nbsp;&nbsp;&nbsp;&nbsp;</span>will be preserved.
-<span class='wmd-help-spaces'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class='wmd-help-spaces'>&nbsp;&nbsp;&nbsp;&nbsp;</span>Markdown is turned off in code blocks:
-<span class='wmd-help-spaces'>&nbsp;&nbsp;&nbsp;&nbsp;</span> [This is not a link](http://example.com)
-</pre>
-        <p>
-            To create not a block, but an inline code span, use backticks:
-        </p>
-        <pre class='wmd-help'>Here is some inline `code`.</pre> <p>For more help see <a href='http://daringfireball.net/projects/markdown/syntax' rel='no-follow'> http://daringfireball.net/projects/markdown/syntax</a></p>");
-
-		return "<div class='wmd-panel'><div id='wmd-button-bar{$id}'></div><div id='wmd-button-bar-help'>".$help."</div>";
-	}
-	function post_textarea_prettify($id=""){
-		$id = esc_attr($id);
-       	 return "<div id='wmd-preview{$id}' class='wmd-panel wmd-preview prettyprint'></div></div>";
-	}
-
-	/*
-	* Register the scripts for the PageDown editor
-	*/
-	function register_scripts() {
-		 //Markdown Preview and Prettify scripts
-		$plugin_dir = plugin_dir_url(__FILE__);
-		
-		$min = (defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG) ? '' : '.min';
-		
-		//Register editor scripts &
-		wp_register_script( 'my-wp-markdown-convertor', $plugin_dir . "js/pagedown/Markdown.Converter.js", array(), self::$version );
-		wp_register_script( 'my-wp-markdown-sanitizer', $plugin_dir . "js/pagedown/Markdown.Sanitizer.js", array(), self::$version );
-		wp_register_script( 'my-wp-markdown-editor', $plugin_dir . "js/pagedown/Markdown.Editor.js", array('my-wp-markdown-convertor','my-wp-markdown-sanitizer'), self::$version );
-		
-		//Register prettify script
-		wp_register_script( 'my-wp-markdown-prettify',"https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js", array(), self::$version );
-
-		//Register editor style 
-		wp_register_style( 'my-wp-markdown-editor', $plugin_dir.'css/markdown-editor.css', array(), self::$version );
-
-        if( !is_admin() && $this->load_prettify() ){
-            wp_enqueue_script( 'my-wp-markdown-prettify' );
+	public function edit_post_content($content, $id) {
+        error_log("edit_post_content $id");
+        //var_dump("edit_post", $content, $id);
+        //die();
+		if ($this->is_Markdownable((int) $id)) {
+            $meta_markdown = get_post((int) $id)->post_content_filtered;
+            error_log("- loaded markdown:" . strlen($meta_markdown));
+            error_log($meta_markdown);
+            error_log("#-#-#-#-#");
+			return $meta_markdown ? $meta_markdown : wpmarkdown_html_to_markdown($content);
+		} else {
+            die("sad");
         }
-
-		//This script sets the ball rolling with the editor & preview
-   		wp_register_script( 'my-wp-markdown', $plugin_dir . "js/markdown.js", array('jquery'), self::$version );
+		return $content;
 	}
+
+	function register_scripts() {
+		$plugin_dir = plugin_dir_url(__FILE__);
+		//$min = (defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG) ? '' : '.min';
+		
+		wp_register_script('my-wp-markdown-convertor', $plugin_dir . "js/pagedown/Markdown.Converter.js", array(), self::$version);
+		wp_register_script('my-wp-markdown-sanitizer', $plugin_dir . "js/pagedown/Markdown.Sanitizer.js", array(), self::$version);
+		wp_register_script('my-wp-markdown-extra', $plugin_dir . "js/pagedown/Markdown.Extra.js", array(), self::$version);
+		wp_register_script('my-wp-markdown-editor', $plugin_dir . "js/pagedown/Markdown.Editor.js",
+            array('my-wp-markdown-convertor','my-wp-markdown-sanitizer', 'my-wp-markdown-extra'), self::$version);
+		wp_register_script('my-wp-markdown-prettify',"https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js", array(), self::$version);
+        wp_register_script('my-wp-markdown-remarkable', $plugin_dir . "js/remarkable.js", array(), self::$version);
+        wp_register_script('my-wp-markdown-admin', $plugin_dir . "js/my-wp-markdown-admin.js", array(), self::$version);
+
+		wp_register_style('my-wp-markdown-editor-style', $plugin_dir.'css/markdown-editor.css', array(), self::$version);
+
+        wp_enqueue_script('my-wp-markdown-prettify');
+	}
+
+    function admin_scripts($hook) {
+        $screen = get_current_screen();
+        $post_type = $screen->post_type;
+        if (('post-new.php' == $hook || 'post.php' == $hook)) {
+            $this->register_scripts();
+            wp_enqueue_script('my-wp-markdown-prettify');
+            wp_enqueue_script('my-wp-markdown-editor');
+            wp_enqueue_script('my-wp-markdown-remarkable');
+            wp_enqueue_script('my-wp-markdown-admin');
+            wp_enqueue_style('my-wp-markdown-editor-style');
+        }
+    }
 	
 	/**
 	 * This ensures the prettify styles & scripts are in the queue 
 	 * When on a home page prettify wont already have been queued.
 	 */
-	function the_content( $content ){
-		$post_id = get_the_ID();
+	function the_content($content){
 		$post_type = get_post_type();
-		$post_types = $this->get_option( 'post_types' ); 
-		
+		$post_types = $this->get_option( 'post_types' );
 		if( $this->get_option( 'prettify') && in_array( $post_type, $post_types ) ){
 			//wp_enqueue_style('my-wp-markdown-prettify');
-			wp_enqueue_script( 'my-wp-markdown' ); //Sets the prettify ball rolling.
+			//wp_enqueue_script( 'my-wp-markdown' ); //Sets the prettify ball rolling.
 		}
-		
+        wp_enqueue_script('my-wp-markdown-prettify');
 		return $content;
 	}
 
-
-	function admin_scripts($hook){
-		$screen = get_current_screen();
-		$post_type = $screen->post_type;
-    		if ( ('post-new.php' == $hook || 'post.php' == $hook) && $this->is_Markdownable($post_type) ){
-				$this->register_scripts();
-				wp_enqueue_script( 'my-wp-markdown-prettify' );
-				wp_enqueue_script( 'my-wp-markdown-editor' );
-				wp_enqueue_style( 'my-wp-markdown-editor' );
-				add_action( 'admin_print_footer_scripts', array($this,'admin_footers_script'),100 );
-		}
-	}
-
-	function admin_footers_script(){
-	?> <script>
-		jQuery(document).ready(function($) {                
-			$('#content').after("<div id='wmd-previewcontent' class='wmd-panel wmd-preview prettyprint'></div>");
-			$('#ed_toolbar').html("<div id='wmd-button-barcontent'></div>");
-			var converter = new Markdown.getSanitizingConverter();
-			var editor = new Markdown.Editor(converter, 'content');
-			editor.run();
-			$('.wmd-preview pre').addClass('prettyprint');
-			if (typeof prettyPrint == 'function') {
-				prettyPrint();
-			}
-            jQuery('#wmd-previewcontent').height(jQuery('#content').height());
-            editor.hooks.chain("onPreviewRefresh", function () {
-                jQuery('#wmd-previewcontent').height(jQuery('#content').height());
-                $('.wmd-preview pre').addClass('prettyprint');
-                if (typeof prettyPrint == 'function') {
-                    prettyPrint();
-                }
-            });
-		});
-		</script><?php
-	}
 }
 
 
@@ -514,3 +325,4 @@ require_once( dirname( __FILE__) . '/markdownify/Converter.php' );
 require_once( dirname( __FILE__) . '/markdownify/ConverterExtra.php' );
 
 $markdown = new WordPress_MyMarkdown();
+
