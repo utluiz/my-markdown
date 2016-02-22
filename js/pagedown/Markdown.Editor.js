@@ -956,14 +956,22 @@
         }
 
         var nonSuckyBrowserPreviewSet = function (text) {
-            //panels.preview.innerHTML = text;
-            var wrapper1 = document.createElement('div');
-            wrapper1.innerHTML = text;
-            var wrapper2 = document.createElement('div');
-            wrapper2.innerHTML = panels.preview.innerHTML;
-            var dd = new diffDOM({});
-            var diff = dd.diff(wrapper2, wrapper1);
-            dd.apply(panels.preview, diff);
+            //update hidden HTML field to be properly submitted
+            var oldText = jQuery('#wmd-htmlcontent').val();
+            jQuery('#wmd-htmlcontent').val(text);
+            //updates preview
+            if (!panels.preview.innerHTML) {
+                panels.preview.innerHTML = text;
+            } else {
+                jQuery(panels.preview).find('.wp-changed').removeClass('wp-changed');
+                var wrapper1 = document.createElement('div');
+                wrapper1.innerHTML = text;
+                var wrapper2 = document.createElement('div');
+                wrapper2.innerHTML = oldText;
+                var dd = new diffDOM();
+                var diff = dd.diff(wrapper2, wrapper1);
+                dd.apply(panels.preview, diff);
+            }
         }
 
         var previewSetter;

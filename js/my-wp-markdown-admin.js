@@ -451,19 +451,25 @@ jQuery(document).ready(function($) {
             var editor = new Markdown.Editor(converter, 'content');
             editor.run();
             editor.hooks.chain("onPreviewRefresh", refresh_callback);
-
-            //highlight new changes
-            $('#wmd-previewcontent').one("DOMSubtreeModified", function() {
-                var $this = $(this);
-                setTimeout(function() {
-                    $this.addClass('wp-changed');
-                }, 0);
-            });
         }
 
         function refresh_editor() {
+            var pc = document.getElementById('wmd-previewcontent');
+            var $pc = $(pc);
             //both editors with same height
-            $('#wmd-previewcontent').height($('#content').height());
+            $pc.height($('#content').height());
+            //scroll to changed content
+            $pc.find('.wp-changed').first().each(function() {
+                var node = this;
+                setTimeout(function() {
+                    var top = $(node).position().top + pc.scrollTop - document.body.scrollTop - 50;
+                    //console.log($(this).position(), $(this).offset(), $pc.offset(), $pc.position(), top, document.body.scrollTop, pc.scrollTop);
+                    $("#wmd-previewcontent").animate({ scrollTop: top }, 500, function() {
+                        //node.scrollIntoView();
+                    });
+                }, 100);
+            });
+
             //pretty print code blocks
             $('.wmd-preview pre').addClass('prettyprint');
             //re-run pretty-print
@@ -472,10 +478,6 @@ jQuery(document).ready(function($) {
             } else if (PR.prettyPrint == 'function') {
                 PR.prettyPrint();
             }
-            //update hidden HTML field to be properly submitted
-            $('#wmd-htmlcontent').val($('#wmd-previewcontent').html());
-            //remove highlights of changes
-            $('#wmd-previewcontent .wp-changed').removeClass('wp-changed');
         }
 
         //main logic
