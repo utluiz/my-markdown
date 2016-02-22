@@ -1,4 +1,10 @@
 <?php
+/*
+Plugin Name: My WP-Markdown
+Description: Allows you to use MarkDown
+Version: 1.5.1
+Author: Luiz Ricardo
+*/
 
 class WordPress_MyMarkdown {
 
@@ -197,19 +203,21 @@ class WordPress_MyMarkdown {
             $data["post_content_filtered"] = $content;
             $content = $_POST['wmd-htmlcontent'];
             if (!$content) {
-                error_log("loading previous version");
-                $content = get_post((int) $data['post_parent'])->post_content_filtered;
+                return new WP_Error('nohtml', 'Fail to obtain HTML content!');
+                //de("Fail to obtain HTML content!");
+                //error_log("loading previous version");
+                //$content = get_post((int) $_POST['data']['wp_autosave']['post_id'])->post_content_filtered;
             }
-            error_log($content);
-            error_log('**************');
-            error_log(do_shortcode($content));
-            if (!$content) die('no content');
+            //error_log($content);
+            //error_log('**************');
+            //error_log(do_shortcode($content));
+            if (!$content) {
+                return new WP_Error('nocontent', 'Fail to obtain HTML content!');
+            }
+            //de('no content');
 		} else if ($data['post_type'] =='revision' && $this->is_Markdownable($data['post_parent'])) {
             error_log("Revision - parent:" . $data['post_parent']);
             $meta_markdown = get_post((int) $data['post_parent'])->post_content_filtered;
-//            error_log("- loaded parent markdown:");
-//            error_log($meta_markdown);
-//            error_log("#-#-#-#-#");
             $data["post_content_filtered"] = $meta_markdown;
             return $data;
         }
@@ -224,9 +232,9 @@ class WordPress_MyMarkdown {
 
     public function restore_revision($id, $revision_id) {
         //error_log("restore_revision $id / $revision_id");
-        //die("restore");
+        //de("restore");
         //var_dump("restore", $post_id, $revision_id);
-        //die();
+        //de();
         //TODO update content with markdown. see https://github.com/Automattic/jetpack/blob/master/modules/markdown/easy-markdown.php
         return $id;
     }
@@ -235,7 +243,7 @@ class WordPress_MyMarkdown {
 	public function edit_post_content($content, $id) {
         error_log("edit_post_content $id");
         //var_dump("edit_post", $content, $id);
-        //die();
+        //de();
 		if ($this->is_Markdownable((int) $id)) {
             $meta_markdown = get_post((int) $id)->post_content_filtered;
             error_log("- loaded markdown:" . strlen($meta_markdown));
@@ -243,7 +251,7 @@ class WordPress_MyMarkdown {
             error_log("#-#-#-#-#");
 			return $meta_markdown ? $meta_markdown : wpmarkdown_html_to_markdown($content);
 		} else {
-            die("sad");
+            return new WP_Error('nohtml', 'Fail to obtain HTML content!'); //di("sad");
         }
 		return $content;
 	}
@@ -252,14 +260,14 @@ class WordPress_MyMarkdown {
 		$plugin_dir = plugin_dir_url(__FILE__);
 		//$min = (defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG) ? '' : '.min';
 		
-		wp_register_script('my-wp-markdown-convertor', $plugin_dir . "js/pagedown/Markdown.Converter.js", array(), self::$version);
+		wp_register_script('my-wp-markdown-diffdom', $plugin_dir . "js/diffDOM.js", array(), self::$version);
+		wp_register_script('my-wp-markdown-converter', $plugin_dir . "js/pagedown/Markdown.Converter.js", array(), self::$version);
 		wp_register_script('my-wp-markdown-sanitizer', $plugin_dir . "js/pagedown/Markdown.Sanitizer.js", array(), self::$version);
 		wp_register_script('my-wp-markdown-extra', $plugin_dir . "js/pagedown/Markdown.Extra.js", array(), self::$version);
-		wp_register_script('my-wp-markdown-editor', $plugin_dir . "js/pagedown/Markdown.Editor.js",
-            array('my-wp-markdown-convertor','my-wp-markdown-sanitizer', 'my-wp-markdown-extra'), self::$version);
-		wp_register_script('my-wp-markdown-prettify',"https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js", array(), self::$version);
+		wp_register_script('my-wp-markdown-editor', $plugin_dir . "js/pagedown/Markdown.Editor.js", array(), self::$version);
         wp_register_script('my-wp-markdown-remarkable', $plugin_dir . "js/remarkable.js", array(), self::$version);
-        wp_register_script('my-wp-markdown-admin', $plugin_dir . "js/my-wp-markdown-admin.js", array(), self::$version);
+        wp_register_script('my-wp-markdown-admin', $plugin_dir . "js/my-wp-markdown-admin.js", array(), self::$version, true);
+		wp_register_script('my-wp-markdown-prettify', 'https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js', array(), self::$version, true);
 
 		wp_register_style('my-wp-markdown-editor-style', $plugin_dir.'css/markdown-editor.css', array(), self::$version);
 
@@ -267,10 +275,14 @@ class WordPress_MyMarkdown {
 	}
 
     function admin_scripts($hook) {
-        $screen = get_current_screen();
-        $post_type = $screen->post_type;
+        //$screen = get_current_screen();
+        //$post_type = $screen->post_type;
         if (('post-new.php' == $hook || 'post.php' == $hook)) {
             $this->register_scripts();
+            wp_enqueue_script('my-wp-markdown-diffdom');
+            wp_enqueue_script('my-wp-markdown-converter');
+            wp_enqueue_script('my-wp-markdown-sanitizer');
+            //wp_enqueue_script('my-wp-markdown-extra');
             wp_enqueue_script('my-wp-markdown-prettify');
             wp_enqueue_script('my-wp-markdown-editor');
             wp_enqueue_script('my-wp-markdown-remarkable');
@@ -325,4 +337,3 @@ require_once( dirname( __FILE__) . '/markdownify/Converter.php' );
 require_once( dirname( __FILE__) . '/markdownify/ConverterExtra.php' );
 
 $markdown = new WordPress_MyMarkdown();
-

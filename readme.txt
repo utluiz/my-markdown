@@ -17,7 +17,9 @@ Markdown Editor (JavaScript, generates HTML)
     Alternatives:
     - https://github.com/jonschlinkert/remarkable
         - https://jonschlinkert.github.io/remarkable/demo/
-        - plugins but no docs
+        - How to build a plugin
+          - https://github.com/rlidwka/markdown-it-regexp/blob/698c6b35e44fbb6b925c25641e48e883f538c5d5/lib/index.js
+          - https://github.com/jonschlinkert/remarkable/issues/48
         - Many options
     - https://github.com/chjj/marked
         - Allow customize tag renderers
