@@ -39,5 +39,10 @@
 }
 
 .wp-changed {
-    background: #84b5b1;
+    background: #f3ffd3;
+}
+
+.diff-removing {
+    text-decoration: line-through;
+    background-color: #ff1e23;
 }

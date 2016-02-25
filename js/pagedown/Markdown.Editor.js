@@ -955,21 +955,28 @@
                 parent.insertBefore(preview, sibling);
         }
 
-        var nonSuckyBrowserPreviewSet = function (text) {
-            //update hidden HTML field to be properly submitted
-            var oldText = jQuery('#wmd-htmlcontent').val();
-            jQuery('#wmd-htmlcontent').val(text);
+        var nonSuckyBrowserPreviewSet = function (newHtml) {
+            //last version from hidden input
+            var oldHtml = jQuery('#wmd-htmlcontent').val();
+            //does nothing if HTML has not changed
+            if (oldHtml == newHtml) return;
+            //updates hidden input with the new html
+            jQuery('#wmd-htmlcontent').val(newHtml);
             //updates preview
             if (!panels.preview.innerHTML) {
-                panels.preview.innerHTML = text;
+                //currently empty -> just put new value
+                panels.preview.innerHTML = newHtml;
             } else {
-                jQuery(panels.preview).find('.wp-changed').removeClass('wp-changed');
-                var wrapper1 = document.createElement('div');
-                wrapper1.innerHTML = text;
-                var wrapper2 = document.createElement('div');
-                wrapper2.innerHTML = oldText;
+                //calculate diff
+                var wrapperOldHtml = document.createElement('div');
+                wrapperOldHtml.innerHTML = oldHtml;
+                var wrapperNewHtml = document.createElement('div');
+                wrapperNewHtml.innerHTML = newHtml;
                 var dd = new diffDOM();
-                var diff = dd.diff(wrapper2, wrapper1);
+                var diff = dd.diff(wrapperOldHtml, wrapperNewHtml);
+                //cleanup highlight changes
+                jQuery(panels.preview).find('.wp-changed').removeClass('wp-changed');
+                //apply new changes
                 dd.apply(panels.preview, diff);
             }
         }

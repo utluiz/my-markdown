@@ -464,14 +464,14 @@ jQuery(document).ready(function($) {
                 setTimeout(function() {
                     var top = $(node).position().top + pc.scrollTop - document.body.scrollTop - 50;
                     //console.log($(this).position(), $(this).offset(), $pc.offset(), $pc.position(), top, document.body.scrollTop, pc.scrollTop);
-                    $("#wmd-previewcontent").animate({ scrollTop: top }, 500, function() {
+                    $("#wmd-previewcontent").stop().animate({ scrollTop: top }, 500, function() {
                         //node.scrollIntoView();
                     });
                 }, 100);
             });
 
             //pretty print code blocks
-            $('.wmd-preview pre').addClass('prettyprint');
+            //$('.wmd-preview pre').addClass('prettyprint');
             //re-run pretty-print
             if (typeof prettyPrint == 'function') {
                 prettyPrint();

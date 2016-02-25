@@ -3953,8 +3953,9 @@ rules.blockquote_close = function (tokens, idx /*, options, env */) {
  */
 
 rules.code = function (tokens, idx /*, options, env */) {
+  //TODO parse comment? or make it language-wise
   if (tokens[idx].block) {
-    return '<pre><code>' + escapeHtml(tokens[idx].content) + '</code></pre>' + getBreak(tokens, idx);
+    return '<pre><code class="prettyprint">' + escapeHtml(tokens[idx].content) + '</code></pre>' + getBreak(tokens, idx);
   }
   return '<code>' + escapeHtml(tokens[idx].content) + '</code>';
 };
@@ -3986,7 +3987,7 @@ rules.fence = function (tokens, idx, options, env, instance) {
     }
 
     langName = escapeHtml(replaceEntities(unescapeMd(fenceName)));
-    langClass = ' class="' + langPrefix + langName + '"';
+    langClass = ' class="' + langPrefix + langName + '"'; //TODO add lines here and above
   }
 
   if (options.highlight) {
