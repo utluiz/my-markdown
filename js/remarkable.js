@@ -3952,10 +3952,23 @@ rules.blockquote_close = function (tokens, idx /*, options, env */) {
  * Code
  */
 
-rules.code = function (tokens, idx /*, options, env */) {
-  //TODO parse comment? or make it language-wise
-  if (tokens[idx].block) {
-    return '<pre><code class="prettyprint">' + escapeHtml(tokens[idx].content) + '</code></pre>' + getBreak(tokens, idx);
+rules.code = function (tokens, idx, options, env) {
+    //TODO parse comment? or make it language-wise
+    if (tokens[idx].block) {
+      var content = tokens[idx].content;
+      var lang = '';
+      if (content.substr(0, 2) == '[[') {
+          var pos = content.indexOf(']]', 2);
+          if (pos > 0) {
+              var arr = content.substring(2, pos - 1).split(/\s+/g);
+              lang = options.langPrefix + arr[0];
+              if (arr.length > 1) {
+                  lang += ' linenums:' + arr[1];
+              }
+              content = content.substring(pos + 2);
+          }
+      }
+    return '<pre><code class="prettyprint ' + lang + '">' + escapeHtml(content) + '</code></pre>' + getBreak(tokens, idx);
   }
   return '<code>' + escapeHtml(tokens[idx].content) + '</code>';
 };
@@ -3980,14 +3993,18 @@ rules.fence = function (tokens, idx, options, env, instance) {
     // for diagrams, latex, and any other fenced block with custom look
     //
 
-    fenceName = token.params.split(/\s+/g)[0];
+    var arr = token.params.split(/\s+/g);
+    fenceName = arr[0];
 
     if (has(instance.rules.fence_custom, fenceName)) {
       return instance.rules.fence_custom[fenceName](tokens, idx, options, env, instance);
     }
 
     langName = escapeHtml(replaceEntities(unescapeMd(fenceName)));
-    langClass = ' class="' + langPrefix + langName + '"'; //TODO add lines here and above
+    langClass = langPrefix + langName;
+    if (arr.length > 1)   {
+        langClass += ' linenums:' + arr[1];
+    }
   }
 
   if (options.highlight) {
@@ -3996,7 +4013,7 @@ rules.fence = function (tokens, idx, options, env, instance) {
     highlighted = escapeHtml(token.content);
   }
 
-  return '<pre><code' + langClass + '>'
+  return '<pre><code class="prettyprint ' + langClass + '">'
         + highlighted
         + '</code></pre>'
         + getBreak(tokens, idx);

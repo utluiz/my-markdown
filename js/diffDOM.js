@@ -1136,7 +1136,7 @@
             }
         },
         applyDiff: function(tree, diff) {
-            console.log(diff);
+            //console.log(diff);
             var node = this.getFromRoute(tree, diff.route),
                 newNode, reference, route, c;
 
@@ -1205,7 +1205,6 @@
                     this.changed(node.parentNode);
                     break;
                 case 'relocateGroup':
-                    alert('relocateGroup')
                     Array.apply(null, new Array(diff.groupLength)).map(function() {
                         return node.removeChild(node.childNodes[diff.from]);
                     }).forEach(function(childNode, index) {

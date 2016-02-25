@@ -465,19 +465,11 @@ jQuery(document).ready(function($) {
                     var top = $(node).position().top + pc.scrollTop - document.body.scrollTop - 50;
                     //console.log($(this).position(), $(this).offset(), $pc.offset(), $pc.position(), top, document.body.scrollTop, pc.scrollTop);
                     $("#wmd-previewcontent").stop().animate({ scrollTop: top }, 500, function() {
+                        PR.prettyPrint();
                         //node.scrollIntoView();
                     });
                 }, 100);
             });
-
-            //pretty print code blocks
-            //$('.wmd-preview pre').addClass('prettyprint');
-            //re-run pretty-print
-            if (typeof prettyPrint == 'function') {
-                prettyPrint();
-            } else if (PR.prettyPrint == 'function') {
-                PR.prettyPrint();
-            }
         }
 
         //main logic
