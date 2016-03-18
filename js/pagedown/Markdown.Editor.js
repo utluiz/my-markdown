@@ -955,7 +955,7 @@
                 parent.insertBefore(preview, sibling);
         }
 
-        var nonSuckyBrowserPreviewSet = function (newHtml) {
+        var nonSuckyBrowserPreviewSet = function(newHtml) {
             //last version from hidden input
             var oldHtml = jQuery('#wmd-htmlcontent').val();
             //does nothing if HTML has not changed
@@ -974,8 +974,9 @@
                 wrapperNewHtml.innerHTML = newHtml;
                 var dd = new diffDOM();
                 var diff = dd.diff(wrapperOldHtml, wrapperNewHtml);
-                //cleanup highlight changes
-                jQuery(panels.preview).find('.wp-changed').removeClass('wp-changed');
+                //restores preview content so changes applied only to preview
+                //won't affect new preview (like code formatting)
+                panels.preview.innerHTML = oldHtml;
                 //apply new changes
                 dd.apply(panels.preview, diff);
             }

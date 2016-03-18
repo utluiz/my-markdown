@@ -1131,6 +1131,7 @@
         },
         changed: function(node) {
             if (this.firstChange) {
+                if (node.tagName == 'CODE') node = node.parentNode;
                 jQuery(node).addClass('wp-changed');
                 this.firstChange = false;
             }

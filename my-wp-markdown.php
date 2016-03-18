@@ -203,7 +203,12 @@ class WordPress_MyMarkdown {
             $data["post_content_filtered"] = $content;
             $content = $_POST['wmd-htmlcontent'];
             if (!$content) {
-                return new WP_Error('nohtml', 'Fail to obtain HTML content!');
+                if (basename($_SERVER['PHP_SELF']) === "post-new.php") {
+                    return $data;
+                } else {
+                    //error to avoid potential problem
+                    return new WP_Error('nohtml', 'Fail to obtain HTML content!');
+                }
                 //de("Fail to obtain HTML content!");
                 //error_log("loading previous version");
                 //$content = get_post((int) $_POST['data']['wp_autosave']['post_id'])->post_content_filtered;
@@ -266,6 +271,7 @@ class WordPress_MyMarkdown {
 		wp_register_script('my-wp-markdown-extra', $plugin_dir . "js/pagedown/Markdown.Extra.js", array(), self::$version);
 		wp_register_script('my-wp-markdown-editor', $plugin_dir . "js/pagedown/Markdown.Editor.js", array(), self::$version);
         wp_register_script('my-wp-markdown-remarkable', $plugin_dir . "js/remarkable.js", array(), self::$version);
+        wp_register_script('my-wp-markdown-remarkable-public', $plugin_dir . "js/remarkable-public.js", array(), self::$version);
         wp_register_script('my-wp-markdown-admin', $plugin_dir . "js/my-wp-markdown-admin.js", array(), self::$version, true);
 		wp_register_script('my-wp-markdown-prettify', 'https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js', array(), self::$version, true);
 
@@ -286,6 +292,7 @@ class WordPress_MyMarkdown {
             wp_enqueue_script('my-wp-markdown-prettify');
             wp_enqueue_script('my-wp-markdown-editor');
             wp_enqueue_script('my-wp-markdown-remarkable');
+            wp_enqueue_script('my-wp-markdown-remarkable-public');
             wp_enqueue_script('my-wp-markdown-admin');
             wp_enqueue_style('my-wp-markdown-editor-style');
         }
@@ -320,18 +327,6 @@ function wpmarkdown_html_to_markdown($html) {
 	return $converter->parseString($html);
 }
 
-/**
- * Converts markdown into HTML
- *
- * @param string $markdown
- * @return string HTML
- */
-function wpmarkdown_markdown_to_html( $markdown ) {
-    $parsedown = new Parsedown();
-	return $parsedown->text($markdown);
-}
-
-require_once( dirname( __FILE__) . '/Parsedown.php' );
 require_once( dirname( __FILE__) . '/markdownify/Parser.php' );
 require_once( dirname( __FILE__) . '/markdownify/Converter.php' );
 require_once( dirname( __FILE__) . '/markdownify/ConverterExtra.php' );

@@ -41,15 +41,6 @@ DOM Diff
     - https://github.com/fiduswriter/diffDOM
 
 
-Markdown Parser (PHP, generates HTML)
-
-    Using: https://github.com/erusev/parsedown
-
-    Alternatives:
-
-    - https://github.com/cebe/markdown
-    - https://github.com/michelf/php-markdown
-
 Code prettify - Colorful code
 
     Google: https://github.com/google/code-prettify
