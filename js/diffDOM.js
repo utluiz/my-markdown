@@ -1238,7 +1238,7 @@
                     if (!node || node.nodeType !== 3) {
                         return false;
                     }
-                    node.parentNode.className += ' wp-changed';
+                    this.changed(node.parentNode);
                     node.parentNode.removeChild(node);
                     break;
                 case 'addTextElement':

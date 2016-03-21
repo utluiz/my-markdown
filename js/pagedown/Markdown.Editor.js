@@ -910,21 +910,7 @@
             }
         };
 
-        var getScaleFactor = function (panel) {
-            if (panel.scrollHeight <= panel.clientHeight) {
-                return 1;
-            }
-            return panel.scrollTop / (panel.scrollHeight - panel.clientHeight);
-        };
-
-        var setPanelScrollTops = function () {
-            if (panels.preview) {
-                panels.preview.scrollTop = (panels.preview.scrollHeight - panels.preview.clientHeight) * getScaleFactor(panels.preview);
-            }
-        };
-
         this.refresh = function (requiresRefresh) {
-
             if (requiresRefresh) {
                 oldInputText = "";
                 makePreviewHtml();
@@ -940,22 +926,7 @@
 
         var isFirstTimeFilled = true;
 
-        // IE doesn't let you use innerHTML if the element is contained somewhere in a table
-        // (which is the case for inline editing) -- in that case, detach the element, set the
-        // value, and reattach. Yes, that *is* ridiculous.
-        var ieSafePreviewSet = function (text) {
-            var preview = panels.preview;
-            var parent = preview.parentNode;
-            var sibling = preview.nextSibling;
-            parent.removeChild(preview);
-            preview.innerHTML = text;
-            if (!sibling)
-                parent.appendChild(preview);
-            else
-                parent.insertBefore(preview, sibling);
-        }
-
-        var nonSuckyBrowserPreviewSet = function(newHtml) {
+        var previewSet = function (newHtml) {
             //last version from hidden input
             var oldHtml = jQuery('#wmd-htmlcontent').val();
             //does nothing if HTML has not changed
@@ -980,48 +951,16 @@
                 //apply new changes
                 dd.apply(panels.preview, diff);
             }
-        }
-
-        var previewSetter;
-
-        var previewSet = function (text) {
-            if (previewSetter)
-                return previewSetter(text);
-
-            try {
-                nonSuckyBrowserPreviewSet(text);
-                previewSetter = nonSuckyBrowserPreviewSet;
-            } catch (e) {
-                previewSetter = ieSafePreviewSet;
-                previewSetter(text);
-            }
         };
 
         var pushPreviewHtml = function (text) {
-
-            var emptyTop = position.getTop(panels.input) - getDocScrollTop();
-
             if (panels.preview) {
                 previewSet(text);
                 previewRefreshCallback();
             }
-
-            setPanelScrollTops();
-
             if (isFirstTimeFilled) {
                 isFirstTimeFilled = false;
                 return;
-            }
-
-            var fullTop = position.getTop(panels.input) - getDocScrollTop();
-
-            if (uaSniffed.isIE) {
-                setTimeout(function () {
-                    window.scrollBy(0, fullTop - emptyTop);
-                }, 0);
-            }
-            else {
-                window.scrollBy(0, fullTop - emptyTop);
             }
         };
 
