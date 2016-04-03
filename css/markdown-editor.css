@@ -1,21 +1,24 @@
 /* MarkDown editor */
-.wmd-panel{width: 100%;}
-.wmd-button-bar {width: 100%;}
-.wmd-help-spaces{background: white;}
-.wmd-button-row {position: relative; margin-left: 5px;margin-right: 5px;margin-bottom: 0px;margin-top: 10px;padding: 0px; height: 20px;}
-.wmd-spacer{width: 1px; height: 20px;margin-left: 14px;position: absolute;background-color: Silver;display: inline-block; list-style: none;}
-.wmd-button {width: 20px;height: 20px;padding-left: 2px;padding-right: 3px;position: absolute;display: inline-block;list-style: none;cursor: pointer;}
-.wmd-button > span {background-image: url(wmd-buttons.png);background-repeat: no-repeat;background-position: 0px 0px;width: 20px;height: 20px;display: inline-block;}
-.wmd-spacer1{left: 50px;}.wmd-spacer2{left: 175px;}.wmd-spacer3{left: 300px;}.wmd-spacer3-admin{left: 320px;}
-.wmd-prompt-background{background-color: Black;}
-.wmd-prompt-dialog{border: 1px solid #999999;background-color: #FDFDF5;}
-.wmd-prompt-dialog > div {font-size: 0.8em;font-family: arial, helvetica, sans-serif;text-align: center;}
-.wmd-prompt-dialog > form > input[type="text"] {border: 1px solid #999999;color: black;}
-.wmd-prompt-dialog > form > input[type="button"]{font-family: trebuchet MS, helvetica, sans-serif;font-size: 0.8em;font-weight: bold;}
+.mmd-panel{width: 100%;}
+.mmd-button-bar {width: 100%;}
+.mmd-help-spaces{background: white;}
+.mmd-button-row {position: relative; margin-left: 5px;margin-right: 5px;margin-bottom: 0px;margin-top: 10px;padding: 0px; height: 20px;}
+.mmd-spacer{width: 1px; height: 20px;margin-left: 14px;position: absolute;background-color: Silver;display: inline-block; list-style: none;}
+.mmd-button {width: 20px;height: 20px;padding-left: 2px;padding-right: 3px;position: absolute;display: inline-block;list-style: none;cursor: pointer;}
+.mmd-button > span {background-image: url(mmd-buttons.png);background-repeat: no-repeat;background-position: 0px 0px;width: 20px;height: 20px;display: inline-block;}
+.mmd-spacer1{left: 50px;}
+.mmd-spacer2{left: 175px;}
+.mmd-spacer3{left: 300px;}
+.mmd-spacer3-admin{left: 320px;}
+.mmd-prompt-background{background-color: Black;}
+.mmd-prompt-dialog{border: 1px solid #999999;background-color: #FDFDF5;}
+.mmd-prompt-dialog > div {font-size: 0.8em;font-family: arial, helvetica, sans-serif;text-align: center;}
+.mmd-prompt-dialog > form > input[type="text"] {border: 1px solid #999999;color: black;}
+.mmd-prompt-dialog > form > input[type="button"]{font-family: trebuchet MS, helvetica, sans-serif;font-size: 0.8em;font-weight: bold;}
 
 /*Markdown Admin*/
-#ed_toolbar .wmd-button-row{margin:5px 0px}
-.wp-admin .wmd-prompt-dialog > div {font-size: 1em;}
+#ed_toolbar .mmd-button-row{margin:5px 0px}
+.wp-admin .mmd-prompt-dialog > div {font-size: 1em;}
 
 #content {
     width: calc(50% - 2px);
@@ -23,9 +26,9 @@
     vertical-align: top;
 }
 
-.wmd-preview {clear: both;line-height: 1.4em !important;margin-bottom: 5px;margin-right: 5px;padding: 3px;width: 100%;}
-
-#postdivrich .wmd-preview {
+#mmd-preview-component {
+    clear: both;
+    width: 100%;
     margin: 35px 0px 10px 0px;
     padding: 20px;
     border-left: 11px solid #aaa;
@@ -36,12 +39,4 @@
     overflow: auto;
     max-height: 100%;
     vertical-align: top;
-}
-
-#wmd-previewcontent:not(:hover) .wp-changed {
-    /* -moz-box-shadow:    inset 0 0 50px red !important;
-     -webkit-box-shadow: inset 0 0 50px red !important;*/
-    box-shadow: 1px 1px 10px red !important;
-    background: rgba(250, 0, 0, 0.2) !important;
-    transition: background 0.3s, box-shadow 0.3s;
 }

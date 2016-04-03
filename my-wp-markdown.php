@@ -28,11 +28,17 @@ class WordPress_MyMarkdown {
 	public $kses_removed = false;
 
 	public function __construct() {
-		register_activation_hook(__FILE__,array(__CLASS__, 'install' )); 
-		register_uninstall_hook(__FILE__,array( __CLASS__, 'uninstall' )); 
-		add_action( 'init', array( $this, 'init' ) );
-		add_action( 'set_current_user', array( $this, 'maybe_remove_kses' ), 99 );
-        add_action( 'admin_init', array( $this, 'admin_init' ) );
+		register_activation_hook(__FILE__,array(__CLASS__, 'install'));
+		register_uninstall_hook(__FILE__,array(__CLASS__, 'uninstall'));
+		add_action('init', array($this, 'init'));
+		add_action('set_current_user', array($this, 'maybe_remove_kses'), 99);
+        add_action('admin_init', array($this, 'admin_init'));
+		add_action('wp_ajax_mmd_preview_component', array($this, 'render_preview_component'));
+	}
+
+	public function render_preview_component() {
+		require_once(dirname(__FILE__) . '/preview-component.php');
+        wp_die();
 	}
 
 	static function install(){
@@ -46,12 +52,12 @@ class WordPress_MyMarkdown {
 	}
 
 	public function init() {
-		add_filter('wp_insert_post_data', array( $this, 'wp_insert_post_data' ), 10, 2);
+		add_filter('wp_insert_post_data', array($this, 'wp_insert_post_data'), 10, 2);
 		$this->maybe_remove_kses();
-		remove_filter( 'content_save_pre', 'balanceTags', 50 ); //Remove balanceTags and apply after MD -> HTML
+		remove_filter('content_save_pre', 'balanceTags', 50); //Remove balanceTags and apply after MD -> HTML
 		add_filter('edit_post_content', array($this, 'edit_post_content'), 10, 2);
-		add_action('wp_enqueue_scripts', array($this,'register_scripts'));
-		if( $this->get_option( 'prettify') ) {
+		add_action('wp_enqueue_scripts', array($this, 'register_scripts'));
+		if ($this->get_option('prettify')) {
 			add_filter('the_content', array($this, 'the_content'));
         }
 	}
@@ -62,7 +68,7 @@ class WordPress_MyMarkdown {
 	 * in code blocks are stripped out. We remove the filter, and conditionally at it back at `wp_insert_post_data`.
 	 */
 	function maybe_remove_kses(){
-		if ( remove_filter( 'content_save_pre', 'wp_filter_post_kses' ) ) {
+		if (remove_filter('content_save_pre', 'wp_filter_post_kses')) {
 			$this->kses_removed = true;
 		}
 	}
@@ -70,17 +76,22 @@ class WordPress_MyMarkdown {
 	/*
 	 * Settings
 	 */
-	function admin_init(){
-		register_setting('writing',$this->domain, array($this,'validate'));
-		add_settings_section( $this->domain.'_section', 'MarkDown', array($this,'settings'), 'writing'); 
-		add_settings_field($this->domain.'_posttypes', __('Enable MarkDown for:', 'my-wp-markdown'), array($this,'settings_posttypes'), 'writing', $this->domain.'_section');
-		add_settings_field($this->domain.'_markdownbar', __('Enable MarkDown help bar for:', 'my-wp-markdown'), array($this,'settings_markdownbar'), 'writing', $this->domain.'_section');
-		add_settings_field($this->domain.'_prettify', __('Enable Prettify syntax highlighter:', 'my-wp-markdown'), array($this,'settings_prettify'), 'writing', $this->domain.'_section');
+	public function admin_init() {
+		register_setting('writing',$this->domain, array($this, 'validate'));
+		add_settings_section($this->domain.'_section', 'MarkDown', array($this, 'settings'), 'writing');
+		add_settings_field($this->domain.'_posttypes', __('Enable MarkDown for:', 'my-wp-markdown'), array($this, 'settings_posttypes'), 'writing', $this->domain.'_section');
+		add_settings_field($this->domain.'_markdownbar', __('Enable MarkDown help bar for:', 'my-wp-markdown'), array($this, 'settings_markdownbar'), 'writing', $this->domain.'_section');
+		add_settings_field($this->domain.'_prettify', __('Enable Prettify syntax highlighter:', 'my-wp-markdown'), array($this, 'settings_prettify'), 'writing', $this->domain.'_section');
 
-		add_filter('user_can_richedit', array($this,'can_richedit'), 99); //Remove html tab for markdown posts
-		add_action('admin_enqueue_scripts', array($this,'admin_scripts'), 10, 1);
+		add_filter('user_can_richedit', array($this, 'can_richedit'), 99); //Remove html tab for markdown posts
+		add_action('admin_head', array($this, 'admin_header'));
+		add_action('admin_enqueue_scripts', array($this, 'admin_scripts'), 10, 1);
         add_action('wp_restore_post_revision', array($this, 'restore_revision'), 10, 2);
     }
+
+	public function admin_header() {
+		echo '<link rel="import" href="' . admin_url('admin-ajax.php') . '?action=mmd_preview_component">';
+	}
 
 	public function can_richedit($bool){
 		$screen = get_current_screen();
@@ -93,13 +104,13 @@ class WordPress_MyMarkdown {
 
 	function settings(){
 		//settings_fields('markdown'); 
-		echo '<p>'.__("Select the post types or comments that will support Markdown. Comments can also feature a Markdown 'help bar' and previewer. Automatic syntax highlighting can be provided by <a href='http://code.google.com/p/google-code-prettify/' target='_blank'>Prettify</a>.",'my-wp-markdown' ).'</p>';
+		echo '<p>'.__("Select the post types or comments that will support Markdown. Comments can also feature a Markdown 'help bar' and previewer. Automatic syntax highlighting can be provided by <a href='http://code.google.com/p/google-code-prettify/' target='_blank'>Prettify</a>.", 'my-wp-markdown').'</p>';
 	}
 
 	function settings_posttypes(){
 		$options = get_option($this->domain);
 		$savedtypes = (array) $options['post_types'];
-		$types=get_post_types(array('public'   => true),'objects'); 
+		$types=get_post_types(array('public'   => true), 'objects');
 		unset($types['attachment']);
 
 		$id = "id={$this->domain}_posttypes'";
@@ -115,18 +126,18 @@ class WordPress_MyMarkdown {
 		$barenabled = isset($options['markdownbar']) ? $options['markdownbar']  : self::$options['markdownbar'];
 		$id = "id={$this->domain}_markdownbar'";
 
-		echo "<label><input type='checkbox' {$id} ".checked(in_array('posteditor',$barenabled),true,false)."name='{$this->domain}[markdownbar][]' value='posteditor' />". esc_html__( 'Post editor','my-wp-markdown' )."</label></br>";
-		echo "<label><input type='checkbox' {$id} ".checked(in_array('comment',$barenabled)&&in_array('comment',$savedtypes),true,false)."name='{$this->domain}[markdownbar][]' value='comment' />".esc_html__('Comments','my-wp-markdown')."</label></br>";
+		echo "<label><input type='checkbox' {$id} ".checked(in_array('posteditor',$barenabled),true,false)."name='{$this->domain}[markdownbar][]' value='posteditor' />". esc_html__('Post editor', 'my-wp-markdown')."</label></br>";
+		echo "<label><input type='checkbox' {$id} ".checked(in_array('comment',$barenabled)&&in_array('comment',$savedtypes),true,false)."name='{$this->domain}[markdownbar][]' value='comment' />".esc_html__('Comments', 'my-wp-markdown')."</label></br>";
 	}
 
-	function settings_prettify(){
+	function settings_prettify() {
 		$options = get_option($this->domain);
 		$checked = (int) $options['prettify'];
 		$id = "id={$this->domain}_prettify'";
 		echo "<input type='checkbox' {$id} ".checked($checked,true,false)."name='{$this->domain}[prettify]' value='1' />";
 	}
 
-	function validate($options){
+	function validate($options) {
 		$clean = array();
 		
 		foreach (self::$options as $option => $default){
@@ -149,7 +160,7 @@ class WordPress_MyMarkdown {
 	* @return (true|false). True if markdown is enabled for this post type. False otherwise.
 	* @since 1.0
 	*/
-	function is_Markdownable($id_or_type){
+	function is_Markdownable($id_or_type) {
 		if(is_int($id_or_type))
 			$type = get_post_type($id_or_type);
 		else
@@ -161,8 +172,8 @@ class WordPress_MyMarkdown {
 		return in_array($type,$savedtypes);
 	}
 
-	function is_bar_enabled($id_or_type){
-		if(is_int($id_or_type))
+	function is_bar_enabled($id_or_type) {
+		if (is_int($id_or_type))
 			$type = get_post_type($id_or_type);
 		else
 			$type = esc_attr($id_or_type);
@@ -175,18 +186,18 @@ class WordPress_MyMarkdown {
 	/*
 	* Function to determine if prettify should be loaded
 	*/
-	function load_prettify(){
-		if( !$this->get_option( 'prettify') ) 
+	function load_prettify() {
+		if (!$this->get_option('prettify'))
 			return false;
 
-		$savedtypes = (array) $this->get_option( 'post_types' );
+		$savedtypes = (array) $this->get_option('post_types');
 
 		return is_singular($savedtypes);
 	}
 	
-	function get_option( $option ){
+	function get_option($option) {
 		$options = get_option($this->domain);
-		if( !isset( $options[$option] ) )
+		if(!isset($options[$option]))
 			return false;
 		
 		return $options[$option];
@@ -201,7 +212,7 @@ class WordPress_MyMarkdown {
 		if ($this->is_Markdownable($data['post_type'])) {
             error_log("- Saving Markdown and Converting");
             $data["post_content_filtered"] = $content;
-            $content = $_POST['wmd-htmlcontent'];
+            $content = $_POST['mmd-htmlcontent'];
             if (!$content) {
                 if (basename($_SERVER['PHP_SELF']) === "post-new.php") {
                     return $data;
@@ -263,7 +274,7 @@ class WordPress_MyMarkdown {
 
 	function register_scripts() {
 		$plugin_dir = plugin_dir_url(__FILE__);
-		//$min = (defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG) ? '' : '.min';
+		//$min = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
 		
 		wp_register_script('my-wp-markdown-diffdom', $plugin_dir . "js/diffDOM.js", array(), self::$version);
 		wp_register_script('my-wp-markdown-converter', $plugin_dir . "js/pagedown/Markdown.Converter.js", array(), self::$version);
@@ -280,7 +291,7 @@ class WordPress_MyMarkdown {
         wp_enqueue_script('my-wp-markdown-prettify');
 	}
 
-    function admin_scripts($hook) {
+    public function admin_scripts($hook) {
         //$screen = get_current_screen();
         //$post_type = $screen->post_type;
         if (('post-new.php' == $hook || 'post.php' == $hook)) {
@@ -289,7 +300,7 @@ class WordPress_MyMarkdown {
             wp_enqueue_script('my-wp-markdown-converter');
             wp_enqueue_script('my-wp-markdown-sanitizer');
             //wp_enqueue_script('my-wp-markdown-extra');
-            wp_enqueue_script('my-wp-markdown-prettify');
+            //wp_enqueue_script('my-wp-markdown-prettify');
             wp_enqueue_script('my-wp-markdown-editor');
             wp_enqueue_script('my-wp-markdown-remarkable');
             wp_enqueue_script('my-wp-markdown-remarkable-public');
@@ -302,12 +313,12 @@ class WordPress_MyMarkdown {
 	 * This ensures the prettify styles & scripts are in the queue 
 	 * When on a home page prettify wont already have been queued.
 	 */
-	function the_content($content){
+	function the_content($content) {
 		$post_type = get_post_type();
-		$post_types = $this->get_option( 'post_types' );
-		if( $this->get_option( 'prettify') && in_array( $post_type, $post_types ) ){
+		$post_types = $this->get_option('post_types');
+		if ($this->get_option('prettify') && in_array($post_type, $post_types)) {
 			//wp_enqueue_style('my-wp-markdown-prettify');
-			//wp_enqueue_script( 'my-wp-markdown' ); //Sets the prettify ball rolling.
+			//wp_enqueue_script('my-wp-markdown'); //Sets the prettify ball rolling.
 		}
         wp_enqueue_script('my-wp-markdown-prettify');
 		return $content;
@@ -327,8 +338,8 @@ function wpmarkdown_html_to_markdown($html) {
 	return $converter->parseString($html);
 }
 
-require_once( dirname( __FILE__) . '/markdownify/Parser.php' );
-require_once( dirname( __FILE__) . '/markdownify/Converter.php' );
-require_once( dirname( __FILE__) . '/markdownify/ConverterExtra.php' );
+require_once(dirname(__FILE__) . '/markdownify/Parser.php');
+require_once(dirname(__FILE__) . '/markdownify/Converter.php');
+require_once(dirname(__FILE__) . '/markdownify/ConverterExtra.php');
 
 $markdown = new WordPress_MyMarkdown();

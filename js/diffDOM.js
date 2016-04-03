@@ -1137,7 +1137,6 @@
             }
         },
         applyDiff: function(tree, diff) {
-            //console.log(diff);
             var node = this.getFromRoute(tree, diff.route),
                 newNode, reference, route, c;
 

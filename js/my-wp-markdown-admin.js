@@ -212,14 +212,18 @@ jQuery(document).ready(function($) {
     //force last execution otherwise the editor won't load
     $(document).ready(function() {
 
+        var $editorPreview = $('<mmd-preview id="mmd-preview-component" class="mmd-panel mmd-preview"></mmd-preview>');
+        var editorPreview = $editorPreview[0];
+        var hiddenInput = $('<input type="hidden" id="mmd-htmlcontent" name="mmd-htmlcontent"/>"')
+
         function insert_content() {
             $('#content')
-                .after("<div id='wmd-previewcontent' class='wmd-panel wmd-preview prettyprint'></div>")
-                .after('<input type="hidden" id="wmd-htmlcontent" name="wmd-htmlcontent"/>"');
-            $('#ed_toolbar').html("<div id='wmd-button-barcontent'></div>");
+                .after($editorPreview)
+                .after(hiddenInput);
+            $('#ed_toolbar').html("<div id='mmd-button-barcontent'></div>");
         }
 
-        function init_editor(refresh_callback) {
+        function init_editor() {
             var md = new Remarkable('full', {
                 html: true,
                 linkify: true,
@@ -233,37 +237,64 @@ jQuery(document).ready(function($) {
             };
             var editor = new Markdown.Editor(converter, 'content');
             editor.run();
-            editor.hooks.chain("onPreviewRefresh", refresh_callback);
         }
 
-        function refresh_editor() {
-            var pc = document.getElementById('wmd-previewcontent');
-            var $pc = $(pc);
-            //both editors with same height
-            $pc.height($('#content').height());
-            //scroll to changed content
-            $pc.find('.wp-changed').first().each(function() {
-                var node = this;
-                setTimeout(function() {
-                    var top = $(node).position().top + pc.scrollTop - document.body.scrollTop - 50;
-                    //console.log($(this).position(), $(this).offset(), $pc.offset(), $pc.position(), top, document.body.scrollTop, pc.scrollTop);
-                    $("#wmd-previewcontent").stop().animate({ scrollTop: top }, 500, function() {
-                        PR.prettyPrint();
-                        //node.scrollIntoView();
-                    });
-                }, 100);
-            });
+        function fix_height() {
+            //both editor and preview with same size
+            $editorPreview.height($('#content').height());
         }
 
         //main logic
         insert_content();
-        init_editor(refresh_editor);
-        setTimeout(refresh_editor, 100);
+        init_editor();
+
+        editorPreview.addEventListener('previewComponentUpdated', function(e) {
+            fix_height();
+        });
+
+        editorPreview.addEventListener('previewComponentElementChanged', function(e) {
+            //consider page
+            console.log(e.detail.element.scrollTop)
+            var top = e.detail.element.getBoundingClientRect().top + editorPreview.scrollTop - editorPreview.getBoundingClientRect().top - 50;
+            $editorPreview.stop().animate({ scrollTop: top }, 500, function() {
+                if (PR) {
+                    PR.prettyPrint();
+                }
+            });
+        });
+
+        document.querySelector('#content').addEventListener('markdownEditorContentChanged', function(e) {
+            var oldHtml = hiddenInput.val(); //last version from hidden input
+            var newHtml = e.detail.html;
+            if (oldHtml != newHtml) {
+                hiddenInput.val(newHtml); //updates hidden input with the new html
+                //changed event
+                if (!editorPreview.content()) {
+                    editorPreview.update(newHtml); //currently empty -> just put new value
+                } else {
+                    //compute diff
+                    var wrapperOldHtml = document.createElement('div');
+                    wrapperOldHtml.innerHTML = oldHtml;
+                    var wrapperNewHtml = document.createElement('div');
+                    wrapperNewHtml.innerHTML = newHtml;
+                    var dd = new diffDOM();
+                    var diff = dd.diff(wrapperOldHtml, wrapperNewHtml);
+                    //apply diff
+                    dd.apply(wrapperOldHtml, diff);
+                    //updated preview component
+                    editorPreview.update(wrapperOldHtml.innerHTML);
+                }
+            }
+        });
+
+        //first fix when loading
+        setTimeout(fix_height, 100);
+        editorPreview.update(hiddenInput.val());
 
         //fix auto_save adding HTML content to post data
         $(document).ajaxSend(function(event, jqxhr, settings) {
             if (settings.data && settings.data.indexOf("[wp_autosave]") >= 0) {
-                settings.data +=  "&wmd-htmlcontent=" + encodeURIComponent($('#wmd-htmlcontent').val());
+                settings.data +=  "&mmd-htmlcontent=" + encodeURIComponent(hiddenInput.val());
             }
         });
 
