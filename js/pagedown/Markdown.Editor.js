@@ -90,7 +90,7 @@
     // - run() actually starts the editor; should be called after all necessary plugins are registered. Calling this more than once is a no-op.
     // - refreshPreview() forces the preview to be updated. This method is only available after run() was called.
     Markdown.Editor = function (markdownConverter, idPostfix, options) {
-        
+
         options = options || {};
 
         if (typeof options.handler === "function") { //backwards compatible behavior
@@ -107,9 +107,9 @@
         var hooks = this.hooks = new Markdown.HookCollection();
         hooks.addNoop("postBlockquoteCreation"); // called with the user's selection *after* the blockquote was created; should return the actual to-be-inserted text
         hooks.addFalse("insertImageDialog");     /* called with one parameter: a callback to be called with the URL of the image. If the application creates
-                                                  * its own image insertion dialog, this hook should return true, and the callback should be called with the chosen
-                                                  * image url (or null if the user cancelled). If this hook returns false, the default dialog will be used.
-                                                  */
+         * its own image insertion dialog, this hook should return true, and the callback should be called with the chosen
+         * image url (or null if the user cancelled). If this hook returns false, the default dialog will be used.
+         */
 
         this.getConverter = function () { return markdownConverter; }
 
@@ -846,13 +846,13 @@
                 result = window.pageYOffset;
             }
             else
-                if (doc.documentElement && doc.documentElement.scrollTop) {
-                    result = doc.documentElement.scrollTop;
-                }
-                else
-                    if (doc.body) {
-                        result = doc.body.scrollTop;
-                    }
+            if (doc.documentElement && doc.documentElement.scrollTop) {
+                result = doc.documentElement.scrollTop;
+            }
+            else
+            if (doc.body) {
+                result = doc.body.scrollTop;
+            }
 
             return result;
         };
@@ -922,9 +922,9 @@
 
         var background = doc.createElement("div"),
             style = background.style;
-        
+
         background.className = "mmd-prompt-background";
-        
+
         style.position = "absolute";
         style.top = "0";
 
@@ -1538,7 +1538,7 @@
 
         var defs = "";
         var regex = /(\[)((?:\[[^\]]*\]|[^\[\]])*)(\][ ]?(?:\n[ ]*)?\[)(\d+)(\])/g;
-        
+
         // The above regex, used to update [foo][13] references after renumbering,
         // is much too liberal; it can catch things that are not actually parsed
         // as references (notably: code). It's impossible to know which matches are
@@ -1552,7 +1552,7 @@
         var complete = chunk.before + chunk.selection + chunk.after;
         var rendered = this.converter.makeHtml(complete);
         var testlink = "http://this-is-a-real-link.biz/";
-        
+
         // If our fake link appears in the rendered version *before* we have added it,
         // this probably means you're a Meta Stack Exchange user who is deliberately
         // trying to break this feature. You can still break this workaround if you
@@ -1560,7 +1560,7 @@
         // that case, consider yourself unsupported.
         while (rendered.indexOf(testlink) != -1)
             testlink += "nicetry/";
-        
+
         var fakedefs = "\n\n";
 
         // the regex is tested on the (up to) three chunks separately, and on substrings,
@@ -1581,13 +1581,13 @@
             skippedChars -= offset;
             return result;
         });
-        
+
         rendered = this.converter.makeHtml(uniquified + fakedefs);
-        
+
         var okayToModify = function(offset) {
             return rendered.indexOf(testlink + offset + "/unicorn") !== -1;
         }
-        
+
         var addDefNumber = function (def) {
             refNumber++;
             def = def.replace(/^[ ]{0,3}\[(\d+)\]:/, "  [" + refNumber + "]:");
@@ -1615,7 +1615,7 @@
         var len = chunk.before.length;
         chunk.before = chunk.before.replace(regex, getLink);
         skippedChars += len;
-        
+
         len = chunk.selection.length;
         if (linkDef) {
             addDefNumber(linkDef);
@@ -1623,7 +1623,7 @@
         else {
             chunk.selection = chunk.selection.replace(regex, getLink);
         }
-        skippedChars += len;        
+        skippedChars += len;
 
         var refOut = refNumber;
 
@@ -1645,7 +1645,7 @@
     // sure the URL and the optinal title are "nice".
     function properlyEncoded(linkdef) {
         return linkdef.replace(/^\s*(.*?)(?:\s+"(.+)")?\s*$/, function (wholematch, link, title) {
-            
+
             var inQueryString = false;
 
             // Having `[^\w\d-./]` in there is just a shortcut that lets us skip
@@ -1670,7 +1670,7 @@
                         inQueryString = true;
                         return "?";
                         break;
-                    
+
                     // In the query string, a plus and a space are identical -- normalize.
                     // Not strictly necessary, but identical behavior to the previous version
                     // of this function.
@@ -1681,7 +1681,7 @@
                 }
                 return encodeURI(match);
             })
-            
+
             if (title) {
                 title = title.trim ? title.trim() : title.replace(/^\s*/, "").replace(/\s*$/, "");
                 title = title.replace(/"/g, "quot;").replace(/\(/g, "&#40;").replace(/\)/g, "&#41;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -1704,7 +1704,7 @@
 
         }
         else {
-            
+
             // We're moving start and end tag back into the selection, since (as we're in the else block) we're not
             // *removing* a link, but *adding* one, so whatever findTags() found is now back to being part of the
             // link text. linkEnteredCallback takes care of escaping any brackets.
@@ -1742,7 +1742,7 @@
                     // would mean a zero-width match at the start. Since zero-width matches advance the string position,
                     // the first bracket could then not act as the "not a backslash" for the second.
                     chunk.selection = (" " + chunk.selection).replace(/([^\\](?:\\\\)*)(?=[[\]])/g, "$1\\").substr(1);
-                    
+
                     var linkDef = " [999]: " + properlyEncoded(link);
 
                     var num = that.addLinkDef(chunk, linkDef);
@@ -1784,7 +1784,7 @@
         chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}([*+-]|\d+[.])[ \t]*\n$/, "\n\n");
         chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}>[ \t]*\n$/, "\n\n");
         chunk.before = chunk.before.replace(/(\n|^)[ \t]+\n$/, "\n\n");
-        
+
         // There's no selection, end the cursor wasn't at the end of the line:
         // The user wants to split the current list item / code line / blockquote line
         // (for the latter it doesn't really matter) in two. Temporarily select the
@@ -1812,7 +1812,7 @@
                 commandMgr.doCode(chunk);
             }
         }
-        
+
         if (fakeSelection) {
             chunk.after = chunk.selection + chunk.after;
             chunk.selection = "";
@@ -1841,15 +1841,15 @@
         // text *directly before* the selection already was a blockquote:
 
         /*
-        if (chunk.before) {
-        chunk.before = chunk.before.replace(/\n?$/, "\n");
-        }
-        chunk.before = chunk.before.replace(/(((\n|^)(\n[ \t]*)*>(.+\n)*.*)+(\n[ \t]*)*$)/,
-        function (totalMatch) {
-        chunk.startTag = totalMatch;
-        return "";
-        });
-        */
+         if (chunk.before) {
+         chunk.before = chunk.before.replace(/\n?$/, "\n");
+         }
+         chunk.before = chunk.before.replace(/(((\n|^)(\n[ \t]*)*>(.+\n)*.*)+(\n[ \t]*)*$)/,
+         function (totalMatch) {
+         chunk.startTag = totalMatch;
+         return "";
+         });
+         */
 
         // This comes down to:
         // Go backwards as many lines a possible, such that each line
@@ -1956,10 +1956,10 @@
 
         if (!/\n/.test(chunk.selection)) {
             chunk.selection = chunk.selection.replace(/^(> *)/,
-            function (wholeMatch, blanks) {
-                chunk.startTag += blanks;
-                return "";
-            });
+                function (wholeMatch, blanks) {
+                    chunk.startTag += blanks;
+                    return "";
+                });
         }
     };
 
