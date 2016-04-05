@@ -70,7 +70,7 @@ class WordPress_MyMarkdown {
      */
     public function enqueue_admin_resources() {
         //$min = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
-        if ($this->is_markdownable() && $this->is_post_editor()) {
+        if ($this->is_post_editor() && $this->is_markdownable()) {
             $plugin_dir = plugin_dir_url(__FILE__);
 
             wp_register_script('my-markdown-diffdom', $plugin_dir . "js/diffDOM/diffDOM.js", array(), self::$version);
@@ -134,7 +134,7 @@ class WordPress_MyMarkdown {
      * @param null $object
      */
     static function log($text, $object = null) {
-        //error_log($text . ($object ? ' => ' . print_r($object, true) : '');
+        //error_log($text . ($object ? ' => ' . print_r($object, true) : ''));
     }
 
     /**
@@ -142,7 +142,11 @@ class WordPress_MyMarkdown {
      * @return int
      */
     function get_post_id() {
-        return (int) ($_GET['post'] ?: $_POST['post_ID'] ?: $_POST['ID'] ?: ($this->is_autosave_request() ? $_POST['data']['wp_autosave']['post_id'] : 0));
+        if (array_key_exists('post', $_GET)) return (int) $_GET['post'];
+        if (array_key_exists('post_ID', $_POST)) return (int) $_POST['post_ID'];
+        if (array_key_exists('ID', $_POST)) return (int) $_POST['ID'];
+        if ($this->is_autosave_request()) return (int) $_POST['data']['wp_autosave']['post_id'];
+        return 0;
     }
 
     /**
@@ -218,7 +222,11 @@ class WordPress_MyMarkdown {
         $this->log("####### wp_insert_post_data", $data);
         $this->log("GET", $_GET);
         $this->log("POST", $_POST);
-        if ($data['post_status'] === 'auto-draft') return $data;
+
+        $action = array_key_exists('action', $_GET) ? $_GET['action'] : array_key_exists('action', $_POST) ? $_POST['action'] : '';
+
+        if ($action !== 'restore' && $action !== 'heartbeat' && $action !== 'editpost') return $data;
+        //if ($data['post_status'] === 'auto-draft' || $data['action'] === 'trash') return $data;
 
         if ($this->is_restore_request()) {
             $revision_id = (int) $_GET['revision'];
