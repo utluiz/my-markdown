@@ -1132,7 +1132,7 @@
         changed: function(node) {
             if (this.firstChange) {
                 if (node.tagName == 'CODE') node = node.parentNode;
-                jQuery(node).addClass('wp-changed');
+                jQuery(node).addClass('mmd-changed');
                 this.firstChange = false;
             }
         },

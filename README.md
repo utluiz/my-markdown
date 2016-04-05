@@ -2,7 +2,6 @@
 
 TODO list:
 
-- Rename plugin and styles (wp-changed)
 - Check licensing info
 - Remove 3rd party dependencies and put on template shoulders:
   - Make prettify work from template

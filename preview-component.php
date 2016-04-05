@@ -28,7 +28,7 @@
                         'element': this.shadowRoot.querySelector('.mmd-preview-content'),
                         'content': content
                     }}));
-                    var changedElement = this.shadowRoot.querySelector('.wp-changed');
+                    var changedElement = this.shadowRoot.querySelector('.mmd-changed');
                     if (changedElement) {
                         this.dispatchEvent(new CustomEvent('previewComponentElementChanged', { detail: {
                             'element': changedElement
