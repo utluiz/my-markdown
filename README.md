@@ -57,7 +57,6 @@ this.dispatchEvent(new CustomEvent('previewComponentUpdated', { detail: {
 
 //...
 
-
 editorPreview.addEventListener('previewComponentUpdated', function(e) {
     //do thing
 });
