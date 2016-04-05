@@ -247,10 +247,12 @@ jQuery(document).ready(function($) {
         });
 
         editorPreview.addEventListener('previewComponentElementChanged', function(e) {
-            //consider page
-            console.log(e.detail.element.scrollTop);
-            var top = e.detail.element.getBoundingClientRect().top + editorPreview.scrollTop - editorPreview.getBoundingClientRect().top - 50;
-            $editorPreview.stop().animate({ scrollTop: top }, 500);
+            var elementTopFromViewport = e.detail.element.getBoundingClientRect().top;
+            var editorTopFromViewport = editorPreview.getBoundingClientRect().top;
+            var position = elementTopFromViewport - editorTopFromViewport + editorPreview.scrollTop;
+            var newTop = elementTopFromViewport + (editorPreview.scrollTop - position);
+            var compensation = newTop < 100 ? 150 - newTop : 50;
+            $editorPreview.stop().animate({ scrollTop: position - compensation }, 500);
         });
 
         document.querySelector('#content').addEventListener('markdownEditorContentChanged', function(e) {
@@ -283,10 +285,8 @@ jQuery(document).ready(function($) {
 
         //fix auto_save adding HTML content to post data
         $(document).ajaxSend(function(event, jqxhr, settings) {
-            console.log(1);
             if (settings.data && settings.data.indexOf("wp_autosave") >= 0) {
                 settings.data +=  "&mmd-html-content=" + encodeURIComponent(hiddenInput.val());
-                console.log(settings);
             }
         });
 

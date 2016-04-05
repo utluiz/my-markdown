@@ -1,9 +1,11 @@
 <?php
 /*
-Plugin Name: My WP-Markdown
-Description: Allows you to use MarkDown
-Version: 1.5.1
+Plugin Name: My Markdown
+Description: Markdown editor with faithful preview
+Version: 1.0.0
 Author: Luiz Ricardo
+Author URI: http://luizricardo.org
+License: MIT
 */
 
 require_once(dirname(__FILE__) . '/markdownify/Parser.php');
@@ -12,7 +14,7 @@ require_once(dirname(__FILE__) . '/markdownify/ConverterExtra.php');
 
 class WordPress_MyMarkdown {
 
-	static $version ='1.5.1';
+	static $version ='1.0.0';
     static $options = array(
         'preview_css' => ''
     );
@@ -78,7 +80,7 @@ class WordPress_MyMarkdown {
             wp_register_script('my-markdown-editor', $plugin_dir . "js/pagedown/Markdown.Editor.js", array(), self::$version);
             wp_register_script('my-markdown-remarkable', $plugin_dir . "js/remarkable.js", array(), self::$version);
             wp_register_script('my-markdown-remarkable-public', $plugin_dir . "js/remarkable-public.js", array(), self::$version);
-            wp_register_script('my-markdown-admin', $plugin_dir . "js/my-wp-markdown-admin.js", array(), self::$version);
+            wp_register_script('my-markdown-admin', $plugin_dir . "js/my-markdown-admin.js", array(), self::$version);
 
             wp_enqueue_script('my-markdown-diffdom');
             wp_enqueue_script('my-markdown-converter');
