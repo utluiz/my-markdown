@@ -2,8 +2,6 @@
 
 TODO list:
 
-- BUG: Scroll brakes when document is scrolled in a way that both editor and preview are scrolled to
-- BUG: Links in preview do not have highlight removed on preview parent hover
 - Rename plugin and styles (wp-changed)
 - Check licensing info
 - Remove 3rd party dependencies and put on template shoulders:
