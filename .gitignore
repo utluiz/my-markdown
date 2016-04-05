@@ -1,0 +1,14 @@
+*~
+.project
+.settings
+.buildpath
+.metadata
+compiler.jar
+externs.js
+externs-converter.js
+Makefile
+node_modules
+vendor
+/composer.phar
+tests
+build
