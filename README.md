@@ -1,66 +1,31 @@
 # My Markdown
 
-TODO list:
+## Existent posts
 
-- Check licensing info
-- Remove 3rd party dependencies and put on template shoulders:
-  - Make prettify work from template
-  - Update syntax highlighter? 
-- Remove unused configurations from plugin (be opinionated)
-  - Check if it's possible disable markdown for posts
-- Make it possible extend markdown without changing the plugin (?) 
-- Review styles (CSS)
-- Organize scripts, styles, project configuration and minify them
-- Rename plugin properly
-- Limit effect on WP Admin only when really editing a post or page
-- Allow disabling for specific posts or pages?
-- enable mbstring in PHP 7
+Auto-convert to Markdown using LGPL PHP library [Markdownify](https://github.com/Elephant418/Markdownify).
 
-Markdownify (PHP, generated Markdown from HTML)
+## Editor
 
-    Updated from: https://github.com/Elephant418/Markdownify
+Toolbar and shortcut keys using [Pagedown](https://github.com/balpha/pagedown) and [Pagedown-Extra](https://github.com/jmcmanus/pagedown-extra)
+similar to Stack Overflow.
 
+## HTML generation
 
-Editor:
+Conversion to HTML using MIT JavaScript library [Remarkable](https://github.com/jonschlinkert/remarkable) and custom plugin. 
 
-    - https://github.com/toopay/bootstrap-markdown
-        See: http://www.codingdrama.com/bootstrap-markdown/
+Generated HTML is sent to server, so no dubious conversion.
 
-Markdown Editor (JavaScript, generates HTML)
+## Preview
 
-    Using:
-    - https://github.com/jmcmanus/pagedown-extra
-    - https://github.com/balpha/pagedown
+Changes are incrementally applied to preview window using LGPL JavaScript library [diffDOM](https://github.com/fiduswriter/diffDOM),
+highlighting elements affected by each change in Markdown code.
 
-    Alternatives:
-    - https://github.com/jonschlinkert/remarkable
-        - https://jonschlinkert.github.io/remarkable/demo/
-        - How to build a plugin
-          - https://github.com/rlidwka/markdown-it-regexp/blob/698c6b35e44fbb6b925c25641e48e883f538c5d5/lib/index.js
-          - https://github.com/jonschlinkert/remarkable/issues/48
-        - Many options
-    - https://github.com/chjj/marked
-        - Allow customize tag renderers
-        - Not straightforward way to add new rules
+## Disabling editor
 
-    - https://github.com/evilstreak/markdown-js
-        - says it's extensible, but how?
-        - not many options
-        - old, but more used
+Disable editor for specific posts and pages adding a custom field named `my-markdown-disabled` with some value like `1` or `true`.
 
-    - https://github.com/arturadib/strapdown
-        - just a wrapper for marked + editor
+# TODO
 
-    - https://github.com/jbt/markdown-editor
-    - https://github.com/benweet/stackedit/
+- Configure project properly to minify code
+- Make it possible to extend markdown without changing the plugin (?) 
 
-DOM Diff
-
-    - https://github.com/fiduswriter/diffDOM
-
-
-Code prettify - Colorful code
-
-    Google: https://github.com/google/code-prettify
-    Used from CDN
-    See: https://github.com/google/code-prettify/blob/master/docs/getting_started.md

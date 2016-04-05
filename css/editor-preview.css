@@ -1,5 +1,3 @@
-/* fix links where hover in preview panel does not remove changes highlight */
-
 .mmd-preview-content:not(:hover) .mmd-changed {
     box-shadow: 1px 1px 10px red !important;
     background: rgba(250, 0, 0, 0.2) !important;

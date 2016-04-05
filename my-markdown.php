@@ -73,13 +73,13 @@ class WordPress_MyMarkdown {
         if ($this->is_markdownable() && $this->is_post_editor()) {
             $plugin_dir = plugin_dir_url(__FILE__);
 
-            wp_register_script('my-markdown-diffdom', $plugin_dir . "js/diffDOM.js", array(), self::$version);
+            wp_register_script('my-markdown-diffdom', $plugin_dir . "js/diffDOM/diffDOM.js", array(), self::$version);
             wp_register_script('my-markdown-converter', $plugin_dir . "js/pagedown/Markdown.Converter.js", array(), self::$version);
             wp_register_script('my-markdown-sanitizer', $plugin_dir . "js/pagedown/Markdown.Sanitizer.js", array(), self::$version);
-            wp_register_script('my-markdown-extra', $plugin_dir . "js/pagedown/Markdown.Extra.js", array(), self::$version);
+            wp_register_script('my-markdown-extra', $plugin_dir . "js/pagedown-extra/Markdown.Extra.js", array(), self::$version);
             wp_register_script('my-markdown-editor', $plugin_dir . "js/pagedown/Markdown.Editor.js", array(), self::$version);
-            wp_register_script('my-markdown-remarkable', $plugin_dir . "js/remarkable.js", array(), self::$version);
-            wp_register_script('my-markdown-remarkable-public', $plugin_dir . "js/remarkable-public.js", array(), self::$version);
+            wp_register_script('my-markdown-remarkable', $plugin_dir . "js/remarkable/remarkable.js", array(), self::$version);
+            wp_register_script('my-markdown-remarkable-public', $plugin_dir . "js/remarkable/remarkable-public.js", array(), self::$version);
             wp_register_script('my-markdown-admin', $plugin_dir . "js/my-markdown-admin.js", array(), self::$version);
 
             wp_enqueue_script('my-markdown-diffdom');
@@ -90,7 +90,7 @@ class WordPress_MyMarkdown {
             wp_enqueue_script('my-markdown-remarkable-public');
             wp_enqueue_script('my-markdown-admin');
 
-            wp_register_style('my-markdown-editor-style', $plugin_dir.'css/markdown-editor.css', array(), self::$version);
+            wp_register_style('my-markdown-editor-style', $plugin_dir.'css/pagedown/markdown-editor.css', array(), self::$version);
             wp_enqueue_style('my-markdown-editor-style');
         }
     }
