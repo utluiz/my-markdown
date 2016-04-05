@@ -171,12 +171,6 @@ function caption_plugin(remarkable, options) {
                 level: state.level
             });
             state.parser.tokenize(state);
-            //state.tokens.push({
-            //    type: 'inline',
-            //    content: content,
-            //    level: state.level + 1,
-            //    children: []
-            //});
             state.tokens.push({
                 type: 'caption_close',
                 tight: false,
@@ -214,7 +208,7 @@ jQuery(document).ready(function($) {
 
         var $editorPreview = $('<mmd-preview id="mmd-preview-component" class="mmd-panel mmd-preview"></mmd-preview>');
         var editorPreview = $editorPreview[0];
-        var hiddenInput = $('<input type="hidden" id="mmd-htmlcontent" name="mmd-htmlcontent"/>"')
+        var hiddenInput = $('<input type="hidden" id="mmd-html-content" name="mmd-html-content"/>"')
 
         function insert_content() {
             $('#content')
@@ -254,13 +248,9 @@ jQuery(document).ready(function($) {
 
         editorPreview.addEventListener('previewComponentElementChanged', function(e) {
             //consider page
-            console.log(e.detail.element.scrollTop)
+            console.log(e.detail.element.scrollTop);
             var top = e.detail.element.getBoundingClientRect().top + editorPreview.scrollTop - editorPreview.getBoundingClientRect().top - 50;
-            $editorPreview.stop().animate({ scrollTop: top }, 500, function() {
-                if (PR) {
-                    PR.prettyPrint();
-                }
-            });
+            $editorPreview.stop().animate({ scrollTop: top }, 500);
         });
 
         document.querySelector('#content').addEventListener('markdownEditorContentChanged', function(e) {
@@ -293,8 +283,10 @@ jQuery(document).ready(function($) {
 
         //fix auto_save adding HTML content to post data
         $(document).ajaxSend(function(event, jqxhr, settings) {
-            if (settings.data && settings.data.indexOf("[wp_autosave]") >= 0) {
-                settings.data +=  "&mmd-htmlcontent=" + encodeURIComponent(hiddenInput.val());
+            console.log(1);
+            if (settings.data && settings.data.indexOf("wp_autosave") >= 0) {
+                settings.data +=  "&mmd-html-content=" + encodeURIComponent(hiddenInput.val());
+                console.log(settings);
             }
         });
 

@@ -1,11 +1,10 @@
 <template id="mmd-preview-template">
     <style>
-        @import url("<?php echo plugin_dir_url(__FILE__); ?>css/markdown-editor-preview.css");
+        @import url("<?php echo plugin_dir_url(__FILE__); ?>css/editor-preview.css");
         @import url("<?php echo wp_get_theme()->get_template_directory_uri(); ?>/mmd-preview-editor.css");
     </style>
     <div class='mmd-preview-content prettyprint'></div>
 </template>
-<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 <script>
     var mmd_template = document.currentScript.ownerDocument.querySelector('#mmd-preview-template');
     var mmdPreview = document.registerElement('mmd-preview', {

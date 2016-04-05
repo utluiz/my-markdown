@@ -57,7 +57,7 @@ module.exports = function(grunt) {
 	
 	clean: {
 		//Clean up build folder
-		main: ['build/my-wp-markdown']
+		main: ['build/my-markdown']
 	},
 
 	copy: {
@@ -75,108 +75,15 @@ module.exports = function(grunt) {
 				'!composer.lock','!composer.phar','!composer.json',
 				'!CONTRIBUTING.md'
 			],
-			dest: 'build/my-wp-markdown/'
+			dest: 'build/my-markdown/'
 		},
-	},
-	
-    checkrepo: {
-    	deploy: {
-            tag: {
-                eq: '<%= pkg.version %>',    // Check if highest repo tag is equal to pkg.version
-            },
-            tagged: true, // Check if last repo commit (HEAD) is not tagged
-            clean: true,   // Check if the repo working directory is clean
-        }
-    },
-    
-    wp_deploy: {
-    	deploy:{
-            options: {
-        		svn_user: 'stephenharris',
-        		plugin_slug: 'my-wp-markdown',
-        		build_dir: 'build/my-wp-markdown/'
-            },
-    	}
-    },
-    
-    po2mo: {
-    	files: {
-        	src: 'languages/*.po',
-          expand: true,
-        },
-    },
-
-    pot: {
-    	options:{
-        	text_domain: 'my-wp-markdown',
-        	dest: 'languages/',
-			keywords: ['__:1',
-			           '_e:1',
-			           '_x:1,2c',
-			           'esc_html__:1',
-			           'esc_html_e:1',
-			           'esc_html_x:1,2c',
-			           'esc_attr__:1', 
-			           'esc_attr_e:1', 
-			           'esc_attr_x:1,2c', 
-			           '_ex:1,2c',
-			           '_n:1,2', 
-			           '_nx:1,2,4c',
-			           '_n_noop:1,2',
-			           '_nx_noop:1,2,3c'
-			          ],
-    	},
-    	files:{
-    		src:  [
-    		       '**/*.php',
-    		       '!node_modules/**',
-    		       '!build/**',
-    		       '!tests/**',
-    		       '!vendor/**',
-    		       '!*~',
-    		       ],
-    		expand: true,
-    	}
-    },
-
-    checktextdomain: {
-    	options:{
-			text_domain: 'my-wp-markdown',
-			correct_domain: true,
-			keywords: ['__:1,2d',
-			           '_e:1,2d',
-			           '_x:1,2c,3d',
-			           'esc_html__:1,2d',
-			           'esc_html_e:1,2d',
-			           'esc_html_x:1,2c,3d',
-			           'esc_attr__:1,2d', 
-			           'esc_attr_e:1,2d', 
-			           'esc_attr_x:1,2c,3d', 
-			           '_ex:1,2c,3d',
-			           '_n:1,2,4d', 
-			           '_nx:1,2,4c,5d',
-			           '_n_noop:1,2,3d',
-			           '_nx_noop:1,2,3c,4d'
-			          ],
-		},
-		files: {
-			src:  [
-				'**/*.php',
-				'!node_modules/**',
-				'!build/**',
-				'!tests/**',
-				'!vendor/**',
-				'!*~',
-			],
-			expand: true,
-		},
-    },
+	}
 	
 });
 
 //Tasks
 grunt.registerTask( 'test', [ 'phpunit', 'jshint' ] );
-grunt.registerTask( 'build', [ 'test', 'uglify', 'pot', 'po2mo', 'wp_readme_to_markdown', 'clean', 'copy' ] );
+grunt.registerTask( 'build', [ 'test', 'uglify', 'clean', 'copy' ] );
 grunt.registerTask( 'deploy', [ 'checkbranch:master', 'checkrepo:deploy',  'test', 'wp_readme_to_markdown', 'clean', 'copy', 'wp_deploy' ] );
 
 grunt.registerTask('readme', ['wp_readme_to_markdown']);

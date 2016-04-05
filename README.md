@@ -1,17 +1,23 @@
+# My Markdown
+
 TODO list:
 
-1. Scroll brakes when document is scrolled in a way that both editor and preview are scrolled to
-2. Links in preview do not have highlight removed on preview parent hover
-3. Rename plugin and styles (wp-changed)
-4. Check licensing info
-5. Remove 3rd party dependencies and put on template shoulders:
- - Make prettify work from template
- - Update syntax highlighter? 
-6. Remove unused configurations from plugin (be opinionated)
- - Check if it's possible disable markdown for posts
-7. Make it possible extend markdown 
-8. Review styles (CSS)
-9. Organize scripts, styles, project configuration and minify them
+- BUG: Scroll brakes when document is scrolled in a way that both editor and preview are scrolled to
+- BUG: Links in preview do not have highlight removed on preview parent hover
+- Rename plugin and styles (wp-changed)
+- Check licensing info
+- Remove 3rd party dependencies and put on template shoulders:
+  - Make prettify work from template
+  - Update syntax highlighter? 
+- Remove unused configurations from plugin (be opinionated)
+  - Check if it's possible disable markdown for posts
+- Make it possible extend markdown without changing the plugin (?) 
+- Review styles (CSS)
+- Organize scripts, styles, project configuration and minify them
+- Rename plugin properly
+- Limit effect on WP Admin only when really editing a post or page
+- Allow disabling for specific posts or pages?
+- enable mbstring in PHP 7
 
 Markdownify (PHP, generated Markdown from HTML)
 
