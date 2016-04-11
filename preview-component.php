@@ -4,11 +4,23 @@
 <?php if (file_exists(wp_get_theme()->get_template_directory() . '/mmd-preview-editor.css')) { ?>
         @import url("<?php echo wp_get_theme()->get_template_directory_uri(); ?>/mmd-preview-editor.css");
 <?php } ?>
+<?php
+    $options = get_option('my-markdown');
+    echo $options && array_key_exists('mmd_preview_css', $options) ? $options['mmd_preview_css'] : '';
+?>
     </style>
     <div class='mmd-preview-content prettyprint'></div>
 </template>
 <?php if (file_exists(wp_get_theme()->get_template_directory() . '/mmd-preview-editor.js')) { ?>
 <script type="text/java" src=""<?php echo wp_get_theme()->get_template_directory_uri(); ?>/mmd-preview-editor.js""></script>
+<?php } ?>
+<?php
+    $js = $options && array_key_exists('mmd_preview_js', $options) ? $options['mmd_preview_js'] : '';
+    if ($js) {
+?>
+<script type="text/java">
+<?php echo $js; ?>
+</script>
 <?php } ?>
 <script>
     var mmd_template = document.currentScript.ownerDocument.querySelector('#mmd-preview-template');

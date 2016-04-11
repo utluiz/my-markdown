@@ -1,0 +1,124 @@
+AUTO SAVE (NO TITLE)
+
+[05-Apr-2016 01:37:58 UTC] ####### wp_insert_post_data(0) => Array
+(
+    [post_author] => 1
+    [post_date] => 2016-04-04 22:37:58
+    [post_date_gmt] => 0000-00-00 00:00:00
+    [post_content] => asdasdasd
+
+! 1
+    [post_content_filtered] => 
+    [post_title] => 
+    [post_excerpt] => 
+    [post_status] => draft
+    [post_type] => post
+    [comment_status] => open
+    [ping_status] => open
+    [post_password] => 
+    [post_name] => 
+    [to_ping] => 
+    [pinged] => 
+    [post_modified] => 2016-04-04 22:37:58
+    [post_modified_gmt] => 2016-04-05 01:37:58
+    [post_parent] => 0
+    [menu_order] => 0
+    [post_mime_type] => 
+    [guid] => http://luizricardo.org/?p=2901
+)
+
+[05-Apr-2016 01:37:58 UTC] GET => Array
+(
+)
+
+[05-Apr-2016 01:37:58 UTC] POST => Array
+(
+    [data] => Array
+        (
+            [wp_autosave] => Array
+                (
+                    [post_id] => 2901
+                    [post_type] => post
+                    [post_author] => 1
+                    [post_title] => 
+                    [content] => asdasdasd
+
+! 1
+                    [excerpt] => 
+                    [catslist] => 
+                    [comment_status] => open
+                    [ping_status] => open
+                    [auto_draft] => 1
+                    [_wpnonce] => 6ef6219f0b
+                )
+
+        )
+
+    [interval] => 60
+    [_nonce] => ddf366c667
+    [action] => heartbeat
+    [screen_id] => post
+    [has_focus] => true
+    [mmd-html-content] => <p>asdasdasd</p>
+<p>! 1</p>
+
+)
+
+[05-Apr-2016 01:37:58 UTC] POSTARR => Array
+(
+    [post_author] => 1
+    [post_content] => asdasdasd
+
+! 1
+    [post_content_filtered] => 
+    [post_title] => 
+    [post_excerpt] => 
+    [post_status] => draft
+    [post_type] => post
+    [comment_status] => open
+    [ping_status] => open
+    [post_password] => 
+    [to_ping] => 
+    [pinged] => 
+    [post_parent] => 0
+    [menu_order] => 0
+    [guid] => http://luizricardo.org/?p=2901
+    [import_id] => 0
+    [context] => 
+    [ID] => 2901
+    [post_date] => 2016-04-04 22:37:58
+    [post_date_gmt] => 
+    [post_name] => 
+    [post_modified] => 2016-04-04 22:35:57
+    [post_modified_gmt] => 0000-00-00 00:00:00
+    [post_mime_type] => 
+    [comment_count] => 0
+    [ancestors] => Array
+        (
+        )
+
+    [post_category] => Array
+        (
+        )
+
+    [tags_input] => Array
+        (
+        )
+
+    [post_id] => 2901
+    [content] => asdasdasd
+
+! 1
+    [excerpt] => 
+    [catslist] => 
+    [auto_draft] => 1
+    [_wpnonce] => 6ef6219f0b
+    [post_ID] => 2901
+    [user_ID] => 1
+    [filter] => db
+)
+
+[05-Apr-2016 01:37:58 UTC] 2901 = 1
+[05-Apr-2016 01:37:58 UTC] Saving markdown and HTML
+[05-Apr-2016 01:37:58 UTC] ------ END -------
+

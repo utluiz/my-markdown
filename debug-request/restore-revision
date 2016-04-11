@@ -1,0 +1,215 @@
+RESTORE REVISION
+
+[05-Apr-2016 04:19:03 UTC] ####### wp_insert_post_data(0) => Array
+(
+    [post_author] => 1
+    [post_date] => 2016-04-05 01:19:03
+    [post_date_gmt] => 0000-00-00 00:00:00
+    [post_content] => <p>d</p>
+
+    [post_content_filtered] => <p>a</p>
+
+    [post_title] => abc
+    [post_excerpt] => 
+    [post_status] => draft
+    [post_type] => post
+    [comment_status] => open
+    [ping_status] => open
+    [post_password] => 
+    [post_name] => 
+    [to_ping] => 
+    [pinged] => 
+    [post_modified] => 2016-04-05 01:19:03
+    [post_modified_gmt] => 2016-04-05 04:19:03
+    [post_parent] => 0
+    [menu_order] => 0
+    [post_mime_type] => 
+    [guid] => http://luizricardo.org/?p=2894
+)
+
+[05-Apr-2016 04:19:03 UTC] GET => Array
+(
+    [revision] => 2905
+    [action] => restore
+    [_wpnonce] => 0e5f53ca6e
+)
+
+[05-Apr-2016 04:19:03 UTC] POST => Array
+(
+)
+
+[05-Apr-2016 04:19:03 UTC] POSTARR => Array
+(
+    [post_author] => 1
+    [post_content] => <p>d</p>
+
+    [post_content_filtered] => <p>a</p>
+
+    [post_title] => abc
+    [post_excerpt] => 
+    [post_status] => draft
+    [post_type] => post
+    [comment_status] => open
+    [ping_status] => open
+    [post_password] => 
+    [to_ping] => 
+    [pinged] => 
+    [post_parent] => 0
+    [menu_order] => 0
+    [guid] => http://luizricardo.org/?p=2894
+    [import_id] => 0
+    [context] => 
+    [ID] => 2894
+    [post_date] => 2016-04-05 01:19:03
+    [post_date_gmt] => 
+    [post_name] => 
+    [post_modified] => 2016-04-05 01:18:38
+    [post_modified_gmt] => 2016-04-05 04:18:38
+    [post_mime_type] => 
+    [comment_count] => 0
+    [ancestors] => Array
+        (
+        )
+
+    [post_category] => Array
+        (
+            [0] => 1
+        )
+
+    [tags_input] => Array
+        (
+        )
+
+    [filter] => db
+)
+
+[05-Apr-2016 04:19:03 UTC] restoring revision 2905 => WP_Post Object
+(
+    [ID] => 2905
+    [post_author] => 1
+    [post_date] => 2016-04-05 00:54:39
+    [post_date_gmt] => 2016-04-05 03:54:39
+    [post_content] => <p>d</p>
+
+    [post_title] => abc
+    [post_excerpt] => 
+    [post_status] => inherit
+    [comment_status] => closed
+    [ping_status] => closed
+    [post_password] => 
+    [post_name] => 2894-revision-v1
+    [to_ping] => 
+    [pinged] => 
+    [post_modified] => 2016-04-05 00:54:39
+    [post_modified_gmt] => 2016-04-05 03:54:39
+    [post_content_filtered] => d
+    [post_parent] => 2894
+    [guid] => http://luizricardo.org/2016/04/2894-revision-v1/
+    [menu_order] => 0
+    [post_type] => revision
+    [post_mime_type] => 
+    [comment_count] => 0
+    [filter] => raw
+)
+
+[05-Apr-2016 04:19:03 UTC] 2894 = 1
+[05-Apr-2016 04:19:03 UTC] ------ END -------
+[05-Apr-2016 04:19:03 UTC] ####### wp_insert_post_data(0) => Array
+(
+    [post_author] => 1
+    [post_date] => 2016-04-05 01:19:03
+    [post_date_gmt] => 2016-04-05 04:19:03
+    [post_content] => <p>d</p>
+
+    [post_content_filtered] => 
+    [post_title] => abc
+    [post_excerpt] => 
+    [post_status] => inherit
+    [post_type] => revision
+    [comment_status] => closed
+    [ping_status] => closed
+    [post_password] => 
+    [post_name] => 2894-revision-v1
+    [to_ping] => 
+    [pinged] => 
+    [post_modified] => 2016-04-05 01:19:03
+    [post_modified_gmt] => 2016-04-05 04:19:03
+    [post_parent] => 2894
+    [menu_order] => 0
+    [post_mime_type] => 
+    [guid] => 
+)
+
+[05-Apr-2016 04:19:03 UTC] GET => Array
+(
+    [revision] => 2905
+    [action] => restore
+    [_wpnonce] => 0e5f53ca6e
+)
+
+[05-Apr-2016 04:19:03 UTC] POST => Array
+(
+)
+
+[05-Apr-2016 04:19:03 UTC] POSTARR => Array
+(
+    [post_author] => 1
+    [post_content] => <p>d</p>
+
+    [post_content_filtered] => 
+    [post_title] => abc
+    [post_excerpt] => 
+    [post_status] => inherit
+    [post_type] => revision
+    [comment_status] => 
+    [ping_status] => 
+    [post_password] => 
+    [to_ping] => 
+    [pinged] => 
+    [post_parent] => 2894
+    [menu_order] => 0
+    [guid] => 
+    [import_id] => 0
+    [context] => 
+    [post_name] => 2894-revision-v1
+    [post_date] => 2016-04-05 01:19:03
+    [post_date_gmt] => 2016-04-05 04:19:03
+    [ID] => 0
+    [filter] => db
+)
+
+[05-Apr-2016 04:19:03 UTC] restoring revision 2905 => WP_Post Object
+(
+    [ID] => 2905
+    [post_author] => 1
+    [post_date] => 2016-04-05 00:54:39
+    [post_date_gmt] => 2016-04-05 03:54:39
+    [post_content] => <p>d</p>
+
+    [post_title] => abc
+    [post_excerpt] => 
+    [post_status] => inherit
+    [comment_status] => closed
+    [ping_status] => closed
+    [post_password] => 
+    [post_name] => 2894-revision-v1
+    [to_ping] => 
+    [pinged] => 
+    [post_modified] => 2016-04-05 00:54:39
+    [post_modified_gmt] => 2016-04-05 03:54:39
+    [post_content_filtered] => d
+    [post_parent] => 2894
+    [guid] => http://luizricardo.org/2016/04/2894-revision-v1/
+    [menu_order] => 0
+    [post_type] => revision
+    [post_mime_type] => 
+    [comment_count] => 0
+    [filter] => raw
+)
+
+[05-Apr-2016 04:19:03 UTC] ------ END -------
+[05-Apr-2016 04:19:03 UTC] edit_post_content id=2894
+[05-Apr-2016 04:19:03 UTC] 2894 = 1
+
+
+

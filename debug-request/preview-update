@@ -1,0 +1,217 @@
+PREVIEW UPDATE
+
+[11-Apr-2016 02:08:32 UTC] ####### wp_insert_post_data => Array
+(
+    [post_author] => 1
+    [post_date] => 2016-04-10 23:08:32
+    [post_date_gmt] => 2016-04-11 02:08:32
+    [post_content] => Algumas vezes tive problemas com o mapeamento do teclado no Eclipse. De uma hora para outra ele parava de reconhecer os acentos, trocando para um layout padrão americano.
+
+Primeiro pensei ser um *bug* no Eclipse, depois no Java, mas não encontrei nada. 
+
+Pesquisando mais a fundo, descobri que não era *bug* coisa nenhuma, acontece que o Eclipse possui muitos atalhos que usam a combinação ALT + SHIFT como base. Porém, ALT + SHIFT é justamente a combinação que o Windows usa para alternar o layout do teclado.
+
+Por padrão, o Windows reconhece o teclado e o configura corretamente como ABNT2, mas ele sempre deixa o teclado padrão americano como segunda opção. Assim, ao usar o refactoring (ALT + SHIFT + R), por exemplo, às vezes essa combinação pode \"escapar\" e ser capturada pelo Windows, que troca o mapeamento.
+
+O engraçado é que geralmente os outros aplicativos continuam a reconhecer os acentos e o cedilha normalmente, causando uma baita confusão sobre a causa do comportamento \"estranho\" do teclado. 
+
+**Fica a dica: para resolver o \"problema\" é só pressionar ALT + SHIFT novamente.** 
+
+Também é possível remover o layout de teclado secundário e assim a combinação de tecla não afetará mais o teclado.
+    [post_content_filtered] => 
+    [post_title] => Problemas com teclas no Eclipse?
+    [post_excerpt] => 
+    [post_status] => inherit
+    [post_type] => revision
+    [comment_status] => closed
+    [ping_status] => closed
+    [post_password] => 
+    [post_name] => 132-autosave-v1
+    [to_ping] => 
+    [pinged] => 
+    [post_modified] => 2016-04-10 23:08:32
+    [post_modified_gmt] => 2016-04-11 02:08:32
+    [post_parent] => 132
+    [menu_order] => 0
+    [post_mime_type] => 
+    [guid] => http://luizricardo.org/2016/04/132-autosave-v1/
+)
+
+[11-Apr-2016 02:08:32 UTC] GET
+[11-Apr-2016 02:08:32 UTC] POST => Array
+(
+    [_wpnonce] => 158679f50a
+    [_wp_http_referer] => /wordpress/wp-admin/post.php?post=132&action=edit
+    [user_ID] => 1
+    [action] => editpost
+    [originalaction] => editpost
+    [post_author] => 1
+    [post_type] => post
+    [original_post_status] => publish
+    [referredby] => http://luizricardo.org/wordpress/wp-admin/edit.php?paged=11
+    [_wp_original_http_referer] => http://luizricardo.org/wordpress/wp-admin/edit.php?paged=11
+    [post_ID] => 132
+    [meta-box-order-nonce] => 0de8c2157c
+    [closedpostboxesnonce] => 089d0db67b
+    [post_title] => Problemas com teclas no Eclipse?
+    [samplepermalinknonce] => 28f6574b00
+    [content] => Algumas vezes tive problemas com o mapeamento do teclado no Eclipse. De uma hora para outra ele parava de reconhecer os acentos, trocando para um layout padrão americano.
+
+Primeiro pensei ser um *bug* no Eclipse, depois no Java, mas não encontrei nada. 
+
+Pesquisando mais a fundo, descobri que não era *bug* coisa nenhuma, acontece que o Eclipse possui muitos atalhos que usam a combinação ALT + SHIFT como base. Porém, ALT + SHIFT é justamente a combinação que o Windows usa para alternar o layout do teclado.
+
+Por padrão, o Windows reconhece o teclado e o configura corretamente como ABNT2, mas ele sempre deixa o teclado padrão americano como segunda opção. Assim, ao usar o refactoring (ALT + SHIFT + R), por exemplo, às vezes essa combinação pode \"escapar\" e ser capturada pelo Windows, que troca o mapeamento.
+
+O engraçado é que geralmente os outros aplicativos continuam a reconhecer os acentos e o cedilha normalmente, causando uma baita confusão sobre a causa do comportamento \"estranho\" do teclado. 
+
+**Fica a dica: para resolver o \"problema\" é só pressionar ALT + SHIFT novamente.** 
+
+Também é possível remover o layout de teclado secundário e assim a combinação de tecla não afetará mais o teclado.
+    [mmd-html-content] => <p>Algumas vezes tive problemas com o mapeamento do teclado no Eclipse. De uma hora para outra ele parava de reconhecer os acentos, trocando para um layout padrão americano.</p>
+<p>Primeiro pensei ser um <em>bug</em> no Eclipse, depois no Java, mas não encontrei nada.</p>
+<p>Pesquisando mais a fundo, descobri que não era <em>bug</em> coisa nenhuma, acontece que o Eclipse possui muitos atalhos que usam a combinação ALT + SHIFT como base. Porém, ALT + SHIFT é justamente a combinação que o Windows usa para alternar o layout do teclado.</p>
+<p>Por padrão, o Windows reconhece o teclado e o configura corretamente como ABNT2, mas ele sempre deixa o teclado padrão americano como segunda opção. Assim, ao usar o refactoring (ALT + SHIFT + R), por exemplo, às vezes essa combinação pode “escapar” e ser capturada pelo Windows, que troca o mapeamento.</p>
+<p>O engraçado é que geralmente os outros aplicativos continuam a reconhecer os acentos e o cedilha normalmente, causando uma baita confusão sobre a causa do comportamento “estranho” do teclado.</p>
+<p><strong>Fica a dica: para resolver o “problema” é só pressionar ALT + SHIFT novamente.</strong></p>
+<p>Também é possível remover o layout de teclado secundário e assim a combinação de tecla não afetará mais o teclado.</p>
+
+    [wp-preview] => dopreview
+    [hidden_post_status] => publish
+    [post_status] => publish
+    [hidden_post_password] => 
+    [hidden_post_visibility] => public
+    [visibility] => public
+    [post_password] => 
+    [jj] => 19
+    [mm] => 09
+    [aa] => 2012
+    [hh] => 12
+    [mn] => 29
+    [ss] => 26
+    [hidden_mm] => 09
+    [cur_mm] => 04
+    [hidden_jj] => 19
+    [cur_jj] => 10
+    [hidden_aa] => 2012
+    [cur_aa] => 2016
+    [hidden_hh] => 12
+    [cur_hh] => 23
+    [hidden_mn] => 29
+    [cur_mn] => 04
+    [wpas] => Array
+        (
+            [0] => 1
+        )
+
+    [original_publish] => Atualizar
+    [post_category] => Array
+        (
+            [0] => 0
+            [1] => 1
+        )
+
+    [newcategory] => Nome da nova categoria
+    [newcategory_parent] => -1
+    [_ajax_nonce-add-category] => 5f9e9e0bfb
+    [tax_input] => Array
+        (
+            [post_tag] => dica,eclipse
+        )
+
+    [newtag] => Array
+        (
+            [post_tag] => 
+        )
+
+    [excerpt] => 
+    [trackback_url] => 
+    [meta] => Array
+        (
+            [24125] => Array
+                (
+                    [key] => dsq_thread_id
+                    [value] => 4484079245
+                )
+
+        )
+
+    [_ajax_nonce] => 0087341a07
+    [metakeyselect] => #NONE#
+    [metakeyinput] => 
+    [metavalue] => 
+    [_ajax_nonce-add-meta] => f261b3f91a
+    [advanced_view] => 1
+    [comment_status] => open
+    [ping_status] => open
+    [post_name] => problemas-com-teclas-no-eclipse
+    [post_author_override] => 1
+    [add_comment_nonce] => b9a70dcbb3
+    [_ajax_fetch_list_nonce] => eeebc4d469
+    [enable_post_sharing] => 1
+    [sharing_status_hidden] => 1
+    [ID] => 132
+    [post_content] => Algumas vezes tive problemas com o mapeamento do teclado no Eclipse. De uma hora para outra ele parava de reconhecer os acentos, trocando para um layout padrão americano.
+
+Primeiro pensei ser um *bug* no Eclipse, depois no Java, mas não encontrei nada. 
+
+Pesquisando mais a fundo, descobri que não era *bug* coisa nenhuma, acontece que o Eclipse possui muitos atalhos que usam a combinação ALT + SHIFT como base. Porém, ALT + SHIFT é justamente a combinação que o Windows usa para alternar o layout do teclado.
+
+Por padrão, o Windows reconhece o teclado e o configura corretamente como ABNT2, mas ele sempre deixa o teclado padrão americano como segunda opção. Assim, ao usar o refactoring (ALT + SHIFT + R), por exemplo, às vezes essa combinação pode \"escapar\" e ser capturada pelo Windows, que troca o mapeamento.
+
+O engraçado é que geralmente os outros aplicativos continuam a reconhecer os acentos e o cedilha normalmente, causando uma baita confusão sobre a causa do comportamento \"estranho\" do teclado. 
+
+**Fica a dica: para resolver o \"problema\" é só pressionar ALT + SHIFT novamente.** 
+
+Também é possível remover o layout de teclado secundário e assim a combinação de tecla não afetará mais o teclado.
+    [post_excerpt] => 
+    [to_ping] => 
+)
+
+[11-Apr-2016 02:08:32 UTC] 132 => Array
+(
+    [132] => 1
+)
+
+[11-Apr-2016 02:08:32 UTC] Revision - parent => WP_Post Object
+(
+    [ID] => 132
+    [post_author] => 1
+    [post_date] => 2012-09-19 12:29:26
+    [post_date_gmt] => 2012-09-19 15:29:26
+    [post_content] => Algumas vezes tive problemas com o mapeamento do teclado no Eclipse. De uma hora para outra ele parava de reconhecer os acentos, trocando para um layout padrão americano.
+
+Primeiro pensei ser um <em>bug</em> no Eclipse, depois no Java, mas não encontrei nada.
+
+Pesquisando mais a fundo, descobri que não era <em>bug</em> coisa nenhuma, acontece que o Eclipse possui muitos atalhos que usam a combinação ALT + SHIFT como base. Porém, ALT + SHIFT é justamente a combinação que o Windows usa para alternar o layout do teclado.
+
+Por padrão, o Windows reconhece o teclado e o configura corretamente como ABNT2, mas ele sempre deixa o teclado padrão americano como segunda opção. Assim, ao usar o refactoring (ALT + SHIFT + R), por exemplo, às vezes essa combinação pode "escapar" e ser capturada pelo Windows, que troca o mapeamento.
+
+O engraçado é que geralmente os outros aplicativos continuam a reconhecer os acentos e o cedilha normalmente, causando uma baita confusão sobre a causa do comportamento "estranho" do teclado.
+
+<strong>Fica a dica: para resolver o "problema" é só pressionar ALT + SHIFT novamente.</strong>
+
+Também é possível remover o layout de teclado secundário e assim a combinação de tecla não afetará mais o teclado.
+    [post_title] => Problemas com teclas no Eclipse?
+    [post_excerpt] => 
+    [post_status] => publish
+    [comment_status] => open
+    [ping_status] => open
+    [post_password] => 
+    [post_name] => problemas-com-teclas-no-eclipse
+    [to_ping] => 
+    [pinged] => 
+    [post_modified] => 2013-09-20 13:58:45
+    [post_modified_gmt] => 2013-09-20 16:58:45
+    [post_content_filtered] => 
+    [post_parent] => 0
+    [guid] => http://luizricardo.org/?p=132
+    [menu_order] => 0
+    [post_type] => post
+    [post_mime_type] => 
+    [comment_count] => 4
+    [filter] => raw
+)
+
+[11-Apr-2016 02:08:32 UTC] ------ END -------
+

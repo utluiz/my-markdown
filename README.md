@@ -99,6 +99,8 @@ panels.input.dispatchEvent(new CustomEvent('markdownEditorContentChanged', { det
 
 # TODO
 
+- Feature: new bootstrap markdown
+- BUG: hover on preview does not work whe there's little text, since the component is not occupying 100% of the height
 - Configure project properly to minify code
 - Make it possible to extend markdown without changing the plugin (?) 
 

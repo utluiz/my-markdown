@@ -1131,7 +1131,7 @@
         },
         changed: function(node) {
             if (this.firstChange) {
-                if (node.tagName == 'CODE') node = node.parentNode;
+                if (node && node.tagName == 'CODE') node = node.parentNode;
                 jQuery(node).addClass('mmd-changed');
                 this.firstChange = false;
             }

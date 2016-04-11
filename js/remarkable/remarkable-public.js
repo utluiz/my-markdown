@@ -163,3 +163,9 @@ function normalizeReference(str) {
   // members (most notably, `__proto__`)
   return str.trim().replace(/\s+/g, ' ').toUpperCase();
 };
+
+function isAlphaNum(code) {
+  return (code >= 0x30 /* 0 */ && code <= 0x39 /* 9 */) ||
+      (code >= 0x41 /* A */ && code <= 0x5A /* Z */) ||
+      (code >= 0x61 /* a */ && code <= 0x7A /* z */);
+};

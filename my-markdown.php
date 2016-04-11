@@ -49,8 +49,10 @@ class WordPress_MyMarkdown {
         add_filter('user_can_richedit', array($this, 'remove_richedit'), 99);
 
         register_setting('writing', $this->domain, array($this, 'sanitize'));
-        add_settings_section($this->domain.'_section', 'MarkDown', array($this, 'settings'), 'writing');
-        add_settings_field($this->domain.'_preview_css', __('Additional CSS for preview:', $this->domain), array($this, 'settings_preview_css'), 'writing', $this->domain.'_section');
+        add_settings_section('mmd_section', 'MarkDown', array($this, 'settings'), 'writing');
+        add_settings_field('mmd_preview_css', __('Additional CSS for preview:', $this->domain), array($this, 'settings_preview_css'), 'writing', 'mmd_section');
+        add_settings_field('mmd_global_css', __('Global CSS for preview:', $this->domain), array($this, 'settings_global_css'), 'writing', 'mmd_section');
+        add_settings_field('mmd_preview_js', __('Additional JavaScript for preview:', $this->domain), array($this, 'settings_preview_js'), 'writing', 'mmd_section');
 
         remove_filter('content_save_pre', 'balanceTags', 50);
         kses_remove_filters();
@@ -62,6 +64,9 @@ class WordPress_MyMarkdown {
 	public function admin_header() {
 		if ($this->is_post_editor()) {
 			echo '<link rel="import" href="' . admin_url('admin-ajax.php') . '?action=mmd_preview_component">';
+            $options = get_option($this->domain);
+            $global_css = $options && array_key_exists('mmd_global_css', $options) ? $options['mmd_global_css'] : '';
+            echo "<style>\n$global_css\n</style>";
 		}
 	}
 
@@ -80,6 +85,9 @@ class WordPress_MyMarkdown {
             wp_register_script('my-markdown-editor', $plugin_dir . "js/pagedown/Markdown.Editor.js", array(), self::$version);
             wp_register_script('my-markdown-remarkable', $plugin_dir . "js/remarkable/remarkable.js", array(), self::$version);
             wp_register_script('my-markdown-remarkable-public', $plugin_dir . "js/remarkable/remarkable-public.js", array(), self::$version);
+            wp_register_script('my-markdown-caption-plugin', $plugin_dir . "js/caption-plugin.js", array(), self::$version);
+            wp_register_script('my-markdown-escape-line-plugin', $plugin_dir . "js/escape-line-plugin.js", array(), self::$version);
+            wp_register_script('my-markdown-glyphs-plugin', $plugin_dir . "js/glyphs-plugin.js", array(), self::$version);
             wp_register_script('my-markdown-admin', $plugin_dir . "js/my-markdown-admin.js", array(), self::$version);
 
             wp_enqueue_script('my-markdown-diffdom');
@@ -88,6 +96,9 @@ class WordPress_MyMarkdown {
             wp_enqueue_script('my-markdown-editor');
             wp_enqueue_script('my-markdown-remarkable');
             wp_enqueue_script('my-markdown-remarkable-public');
+            wp_enqueue_script('my-markdown-caption-plugin');
+            wp_enqueue_script('my-markdown-escape-line-plugin');
+            wp_enqueue_script('my-markdown-glyphs-plugin');
             wp_enqueue_script('my-markdown-admin');
 
             wp_register_style('my-markdown-editor-style', $plugin_dir.'css/pagedown/markdown-editor.css', array(), self::$version);
@@ -113,16 +124,30 @@ class WordPress_MyMarkdown {
     /* ADMIN SETTINGS ------------------------------------------------------------------------------ */
 
 	function settings() {
-		echo '<p>'.__("My Markdown settings", 'my-markdown').'</p>';
+		//echo '<p>'.__("My Markdown settings", 'my-markdown').'</p>';
 	}
 
 	function settings_preview_css() {
 		$options = get_option($this->domain);
-		$preview_css = $options ? $options['preview_css'] : '';
-        echo "<label>" . esc_html__('Preview CSS', $this->domain) . "</label><textarea id='my-markdown-preview-css' name='my-markdown-preview-css'>" . esc_html__($preview_css) . "</textarea><br/>";
+		$preview_css = $options && array_key_exists('mmd_preview_css', $options) ? $options['mmd_preview_css'] : '';
+        echo "<textarea id='mmd_preview_css' name='my-markdown[mmd_preview_css]' rows='10' class='large-text'>" . esc_html__($preview_css) . "</textarea><br/>";
+	}
+
+	function settings_global_css() {
+		$options = get_option($this->domain);
+		$global_css = $options && array_key_exists('mmd_global_css', $options) ? $options['mmd_global_css'] : '';
+        echo "<textarea id='mmd_global_css' name='my-markdown[mmd_global_css]' rows='10' class='large-text'>" . esc_html__($global_css) . "</textarea><br/>";
+	}
+
+	function settings_preview_js() {
+		$options = get_option($this->domain);
+		$preview_js = $options && array_key_exists('mmd_preview_js', $options) ? $options['mmd_preview_js'] : '';
+        echo "<textarea id='mmd_preview_js' name='my-markdown[mmd_preview_js]' rows='10' class='large-text'>" . esc_html__($preview_js) . "</textarea><br/>";
 	}
 
 	function sanitize($options) {
+
+        error_log(print_r($options, true));
 		return $options;
 	}
 
@@ -173,12 +198,48 @@ class WordPress_MyMarkdown {
         return defined('DOING_AUTOSAVE') && DOING_AUTOSAVE;
     }
 
+    function get_request_action() {
+        return array_key_exists('action', $_GET) ? $_GET['action'] : array_key_exists('action', $_POST) ? $_POST['action'] : '';
+    }
+
     /**
      * Check whether is a Revision Restore request
      * @return bool
      */
     function is_restore_request() {
-        return $_GET['action'] === 'restore';
+        return $this->get_request_action() === 'restore';
+    }
+
+    /**
+     * Check whether is a post revision being handled
+     * @return bool
+     */
+    function is_post_revision() {
+        return array_key_exists('post_type', $_POST) ? $_POST['post_type'] === 'revision' : false;
+    }
+
+    /**
+     * Check whether is an Heartbeat auto save request
+     * @return bool
+     */
+    function is_heartbeat_request() {
+        return $this->get_request_action() === 'heartbeat';
+    }
+
+    /**
+     * Check whether is an post update request
+     * @return bool
+     */
+    function is_postedit_request() {
+        return $this->get_request_action() === 'editpost';
+    }
+
+    /**
+     * Check whether is an update preview request
+     * @return bool
+     */
+    function is_preview_update() {
+        return array_key_exists('wp-preview', $_POST) ? $_POST['wp-preview'] === 'dopreview' : false;
     }
 
     /**
@@ -217,16 +278,16 @@ class WordPress_MyMarkdown {
      * - Publishing
      * - Updating
      * - Restoring a revision
+     * - Previewing update
      */
 	public function post_data($data, $postarr) {
-        $this->log("####### wp_insert_post_data", $data);
+        $this->log("################# wp_insert_post_data", $data);
         $this->log("GET", $_GET);
         $this->log("POST", $_POST);
 
-        $action = array_key_exists('action', $_GET) ? $_GET['action'] : array_key_exists('action', $_POST) ? $_POST['action'] : '';
-
-        if ($action !== 'restore' && $action !== 'heartbeat' && $action !== 'editpost') return $data;
-        //if ($data['post_status'] === 'auto-draft' || $data['action'] === 'trash') return $data;
+        if (!$this->is_restore_request() && !$this->is_heartbeat_request() && !$this->is_postedit_request()) {
+            return $data;
+        }
 
         if ($this->is_restore_request()) {
             $revision_id = (int) $_GET['revision'];
@@ -242,31 +303,30 @@ class WordPress_MyMarkdown {
             } else {
                 $this->log('No markdown enabled for revision?!');
             }
-        } else {
-            if ($data['post_type'] =='revision') {
-                if ($this->is_markdownable($data['post_parent'])) {
-                    $parent = get_post((int) $data['post_parent']);
-                    $this->log("Revision - parent", $parent);
-                    $data['post_content_filtered'] = $parent->post_content_filtered;
-                } else {
-                    //restore markdown?
-                    $this->log('saving revision');
-                }
-            } else if ($this->is_markdownable()) {
-                $content = $data['post_content'];
-                $html_content = $_POST['mmd-html-content'];
-                if ($html_content) {
-                    $this->log("Saving markdown and HTML");
-                    $data['post_content_filtered'] = $content;
-                    $data['post_content'] = $html_content;
-                } else if ($content) {
-                    $this->log('Failed to obtain HTML content!');
-                    throw new WP_Error('nohtml', 'Failed to obtain HTML content!');
-                }
+        } else if (!$this->is_preview_update() &&  $this->is_post_revision()) {
+            if ($this->is_markdownable($data['post_parent'])) {
+                $parent = get_post((int) $data['post_parent']);
+                $this->log("Revision - parent", $parent);
+                $data['post_content_filtered'] = $parent->post_content_filtered;
             } else {
-                $this->log('No markdown enabled!');
+                //restore markdown?
+                $this->log('saving revision');
             }
+        } else if ($this->is_markdownable()) {
+            $content = $data['post_content'];
+            $html_content = $_POST['mmd-html-content'];
+            if ($html_content) {
+                $this->log("Saving markdown and HTML");
+                $data['post_content_filtered'] = $content;
+                $data['post_content'] = $html_content;
+            } else if ($content) {
+                $this->log('Failed to obtain HTML content!');
+                throw new WP_Error('nohtml', 'Failed to obtain HTML content!');
+            }
+        } else {
+            $this->log('No markdown enabled!');
         }
+
         $this->log('------ END -------');
         return $data;
 	}
