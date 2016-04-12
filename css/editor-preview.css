@@ -3,6 +3,10 @@
     background: rgba(250, 0, 0, 0.2) !important;
 }
 
+.mmd-preview-content {
+    height: 100%;
+}
+
 * {
     transition: background 0.3s, box-shadow 0.3s;
 }

@@ -97,10 +97,76 @@ panels.input.dispatchEvent(new CustomEvent('markdownEditorContentChanged', { det
 }}));
 ```
 
+# Markdown Additional Plugins
+
+## Bootstrap Well
+
+Example:
+
+```
+<<<well
+**Super** content!
+>>>
+```
+
+Custom class:
+
+```
+<<<well:well-lg
+**Super** content with extra space!
+>>>
+```
+
+## Bootstrap Alerts
+
+Example:
+
+```
+<<<alert
+**Info** alert...
+>>>
+```
+
+Custom type:
+
+```
+<<<alert:danger
+**Danger** alert!
+>>>
+```
+
+Custom class:
+
+```
+<<<alert:danger extra-class
+**Danger** alert!
+>>>
+```
+
+## Bootstrap Glyphicons
+
+Just use `@@` plus name as described in [Bootstrap documentation](http://getbootstrap.com/components/#glyphicons).
+
+Download icon example:
+
+```
+[@@download](http://download.com/file.zip)
+```
+
+## Escape line
+
+Sometimes you want to escape content to be processed by Remarkable. One example is a wordpress shortcode. 
+
+You can achieve that starting a line with two exclamation points, as in this example:
+ 
+```
+!![embed]https://www.youtube.com/watch?v=SnAq9tbeRm4[/embed]
+```
+
 # TODO
 
-- Feature: new bootstrap markdown
-- BUG: hover on preview does not work whe there's little text, since the component is not occupying 100% of the height
 - Configure project properly to minify code
+- Add TOC generation (?)
+- Feature: new bootstrap markdown for labels (?)
 - Make it possible to extend markdown without changing the plugin (?) 
 

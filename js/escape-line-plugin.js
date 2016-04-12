@@ -8,7 +8,6 @@ function escape_line_plugin(remarkable) {
         if (pos > end || end - pos < 4) { return false; }
         if (state.src.charCodeAt(pos) !== 0x21/* ! */
             || state.src.charCodeAt(pos+1) !== 0x21/* ! */) { return false; }
-        if (silent) { return true; }
 
         var escaped = state.src.slice(pos+2, end);
         if (!silent) {

@@ -23,6 +23,7 @@ jQuery(document).ready(function($) {
             md.use(caption_plugin);
             md.use(escape_line_plugin);
             md.use(glyphs_plugin);
+            md.use(bootstrap_blocks_plugin);
             var converter = {
                 makeHtml: function(text) {
                     return md.render(text);

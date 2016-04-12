@@ -88,6 +88,7 @@ class WordPress_MyMarkdown {
             wp_register_script('my-markdown-caption-plugin', $plugin_dir . "js/caption-plugin.js", array(), self::$version);
             wp_register_script('my-markdown-escape-line-plugin', $plugin_dir . "js/escape-line-plugin.js", array(), self::$version);
             wp_register_script('my-markdown-glyphs-plugin', $plugin_dir . "js/glyphs-plugin.js", array(), self::$version);
+            wp_register_script('my-markdown-bootstrap-blocks-plugin', $plugin_dir . "js/bootstrap-blocks-plugin.js", array(), self::$version);
             wp_register_script('my-markdown-admin', $plugin_dir . "js/my-markdown-admin.js", array(), self::$version);
 
             wp_enqueue_script('my-markdown-diffdom');
@@ -99,6 +100,7 @@ class WordPress_MyMarkdown {
             wp_enqueue_script('my-markdown-caption-plugin');
             wp_enqueue_script('my-markdown-escape-line-plugin');
             wp_enqueue_script('my-markdown-glyphs-plugin');
+            wp_enqueue_script('my-markdown-bootstrap-blocks-plugin');
             wp_enqueue_script('my-markdown-admin');
 
             wp_register_style('my-markdown-editor-style', $plugin_dir.'css/pagedown/markdown-editor.css', array(), self::$version);
