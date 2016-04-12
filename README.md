@@ -169,4 +169,6 @@ You can achieve that starting a line with two exclamation points, as in this exa
 - Add TOC generation (?)
 - Feature: new bootstrap markdown for labels (?)
 - Make it possible to extend markdown without changing the plugin (?) 
+  - http://projects.jga.me/toc/#toc8
+  - https://github.com/gajus/contents
 

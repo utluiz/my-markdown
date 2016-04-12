@@ -103,7 +103,7 @@ class WordPress_MyMarkdown {
             wp_enqueue_script('my-markdown-bootstrap-blocks-plugin');
             wp_enqueue_script('my-markdown-admin');
 
-            wp_register_style('my-markdown-editor-style', $plugin_dir.'css/pagedown/markdown-editor.css', array(), self::$version);
+            wp_register_style('my-markdown-editor-style', $plugin_dir.'css/markdown-editor.css', array(), self::$version);
             wp_enqueue_style('my-markdown-editor-style');
         }
     }
