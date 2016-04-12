@@ -148,8 +148,6 @@ class WordPress_MyMarkdown {
 	}
 
 	function sanitize($options) {
-
-        error_log(print_r($options, true));
 		return $options;
 	}
 
